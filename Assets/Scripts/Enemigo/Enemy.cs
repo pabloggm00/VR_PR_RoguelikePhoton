@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
         spriteRenderer.color = ElementsInteractions.GetElementColor(element);
 
         damageEffect = GetComponent<DamageEffect>();
-        damageEffect.Init();
+        damageEffect.Init(spriteRenderer);
     }
 
 

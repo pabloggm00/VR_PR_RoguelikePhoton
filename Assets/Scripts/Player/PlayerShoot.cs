@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -9,13 +10,17 @@ public class PlayerShoot : MonoBehaviour
     [Header("Configuración del player")]
     public ElementType element;
     public SpriteRenderer spriteRenderer;
+    private PlayerController playerController;
 
     [Header("Configuración de disparo")]
     public float bulletSpeed = 10f; //Velocidad de la bala     
     public int bulletDamage = 1; //Daño personaje     
+    public float shootCooldown = 0.5f; //Daño personaje     
     [SerializeField] private GameObject bulletPrefab; //Para instanciar por si nos quedamos sin ninguna
     [SerializeField] private Transform spawnBullet; //Donde spawnea la bala
     [SerializeField] private GameObject poolParent; //La piscina que contiene las balas
+    private Vector2 shootDirection = Vector2.zero;
+    bool canShoot = true;
 
     private List<GameObject> bulletPool = new(); //Lista de balas en la pool
     private List<GameObject> activeBullets = new(); //Balas activas
@@ -25,31 +30,57 @@ public class PlayerShoot : MonoBehaviour
     private void OnEnable()
     {
         InputManager.playerControls.Player.Shoot.performed += OnShootInput;
+        InputManager.playerControls.Player.Shoot.canceled += OnShootInputCancel;
     }
 
     private void OnDisable()
     {
         InputManager.playerControls.Player.Shoot.performed -= OnShootInput;
+        InputManager.playerControls.Player.Shoot.canceled -= OnShootInputCancel;
     }
 
     void Start()
     {
+        playerController = GetComponent<PlayerController>();
         mainCamera = Camera.main;
 
         spriteRenderer.color = ElementsInteractions.GetElementColor(element);
     }
 
+    private void Update()
+    {
+        if (shootDirection != Vector2.zero && canShoot)
+        {
+            Shoot();
+            canShoot = false;
+        }
+    }
+
+    void UpdateSpriteFlip()
+    {
+        // Flipeamos horizontalmente si disparamos hacia la izquierda o derecha
+        if (shootDirection == Vector2.right)
+            spriteRenderer.flipX = false;
+        else if (shootDirection == Vector2.left)
+            spriteRenderer.flipX = true;
+    }
+
     void OnShootInput(InputAction.CallbackContext context)
     {
-        Shoot();
+        shootDirection = context.ReadValue<Vector2>();
+
+        UpdateSpriteFlip();
+    }
+
+    void OnShootInputCancel(InputAction.CallbackContext context)
+    {
+        shootDirection = context.ReadValue<Vector2>();
+
+        playerController.UpdateSpriteFlip(); //Recolocamos al personaje
     }
 
     void Shoot()
     {
-        Vector2 mousePosition = mainCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-
-        //Cogemos la dirección 
-        Vector2 shootDirection = (mousePosition - (Vector2)transform.position).normalized;
 
         // Comprobamos qué balas de la lista de balas en uso
         // se han descativado al colisionar y las devolvemos a la pool.
@@ -86,8 +117,18 @@ public class PlayerShoot : MonoBehaviour
         chosenBullet.SetActive(true);
 
         Bullet bulletScript = chosenBullet.GetComponent<Bullet>();
-        bulletScript.Setup(shootDirection, bulletSpeed, bulletDamage, element);
+        bulletScript.Setup(shootDirection.normalized, bulletSpeed, bulletDamage, element);
+
+        StartCoroutine(CooldownShoot());
     }
+
+    IEnumerator CooldownShoot()
+    {
+        yield return new WaitForSeconds(shootCooldown);
+
+        canShoot = true;
+    }
+
 
 
 }

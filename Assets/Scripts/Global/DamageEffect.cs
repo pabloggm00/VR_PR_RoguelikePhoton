@@ -13,17 +13,14 @@ public class DamageEffect : MonoBehaviour
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
 
     }
 
-    public void Init()
+    public void Init(SpriteRenderer sprite)
     {
-
-        if (spriteRenderer != null)
-        {
-            originalColor = spriteRenderer.color;
-        }
+        spriteRenderer = sprite;
+        originalColor = spriteRenderer.color;
+        
     }
 
 
@@ -60,5 +57,7 @@ public class DamageEffect : MonoBehaviour
 
             yield return null;
         }
+
+        spriteRenderer.color = originalColor;
     }
 }
