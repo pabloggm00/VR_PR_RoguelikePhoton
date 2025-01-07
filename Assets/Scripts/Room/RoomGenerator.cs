@@ -16,9 +16,18 @@ public class RoomGenerator : MonoBehaviour
     public GameObject doorPrefab;  // Prefab de la puerta
     public GameObject doorParent;  // Prefab de la puerta
 
-    public void SpawnPlayer(GameObject playerPrefab)
+    [Header("Spawner")]
+    public SpawnEnemies spawner;
+
+    GameObject SpawnPlayer(GameObject playerPrefab)
     {
-        Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        return Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+    }
+
+    public void InitGame(GameObject playerPrefab)
+    {
+        spawner.player = SpawnPlayer(playerPrefab);
+        spawner.SpawnEnemigos();
     }
 
     public void GenerateRoom()

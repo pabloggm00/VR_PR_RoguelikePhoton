@@ -44,7 +44,11 @@ public class PlayerShoot : MonoBehaviour
         playerController = GetComponent<PlayerController>();
         mainCamera = Camera.main;
 
+        GetComponent<PlayerHealth>().element = element;
+
         spriteRenderer.color = ElementsInteractions.GetElementColor(element);
+
+        poolParent = new GameObject("Pool Parent");
     }
 
     private void Update()

@@ -15,7 +15,11 @@ public class GameManager : MonoBehaviour
     void InitWorld()
     {
         roomGenerator.GenerateRoom();
-        roomGenerator.SpawnPlayer(player);
+        roomGenerator.InitGame(player);
+    }
 
+    private void Update()
+    {
+        
     }
 }

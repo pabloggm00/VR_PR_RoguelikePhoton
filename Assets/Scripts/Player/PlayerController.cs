@@ -67,4 +67,5 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = Vector2.SmoothDamp(rb.velocity, movementInput * moveSpeed, ref currentVelocity, smoothness);
     }
+
 }

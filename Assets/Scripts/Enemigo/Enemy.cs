@@ -5,12 +5,17 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float hP;
+    public int damage;
     public ElementType element;
     public SpriteRenderer spriteRenderer;
 
     public float currentHP;
 
     private DamageEffect damageEffect;
+
+    // Evento para notificar al spawner
+    public delegate void EnemyDeathHandler(Enemy enemy);
+    public static event EnemyDeathHandler OnEnemyDeath;
 
     private void Start()
     {
@@ -32,8 +37,28 @@ public class Enemy : MonoBehaviour
 
         if (currentHP <= 0)
         {
-            currentHP = 0; //Muere
+            currentHP = 0; // Muere
+            Die();
         }
     }
+
+    private void Die()
+    {
+        OnEnemyDeath?.Invoke(this); // Notificar al spawner
+        Destroy(gameObject); // Eliminar al enemigo
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collision.TryGetComponent<PlayerHealth>(out PlayerHealth player))
+        {
+            Debug.Log("Hola");
+            player.TakeDamage(damage, element);
+        }
+
+       
+    }
+
 
 }
