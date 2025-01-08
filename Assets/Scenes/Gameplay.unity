@@ -200,9 +200,9 @@ MonoBehaviour:
   minEnemies: 1
   maxEnemies: 3
   regularEnemies:
-  - {fileID: 5558169003926074543, guid: 43e8d175962dd9b478477e10271a90f9, type: 3}
-  - {fileID: 5558169003926074543, guid: 43e8d175962dd9b478477e10271a90f9, type: 3}
-  bossEnemy: {fileID: 5558169003926074543, guid: 43e8d175962dd9b478477e10271a90f9, type: 3}
+  - {fileID: 5558169003926074543, guid: 1efdc04ec0031474cb0bcc9157339d07, type: 3}
+  - {fileID: 5558169003926074543, guid: 1efdc04ec0031474cb0bcc9157339d07, type: 3}
+  bossEnemy: {fileID: 5558169003926074543, guid: 1efdc04ec0031474cb0bcc9157339d07, type: 3}
   roundsUntilBoss: 3
   roundPauseDuration: 2
   roomGenerator: {fileID: 84014395}
@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomGenerator: {fileID: 84014395}
-  player: {fileID: 6992864544089632955, guid: b68bdebab27fbe340999851bd7f0d9cb, type: 3}
+  player: {fileID: 6992864544089632955, guid: f9a809ddc47611045b3d339db2f442ae, type: 3}
 --- !u!1 &1702813942
 GameObject:
   m_ObjectHideFlags: 0
