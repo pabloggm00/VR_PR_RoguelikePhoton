@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,15 +19,18 @@ public class RoomGenerator : MonoBehaviour
 
     [Header("Spawner")]
     public SpawnEnemies spawner;
+    public Transform spawnPlayer;
 
-    GameObject SpawnPlayer(GameObject playerPrefab)
+    GameObject SpawnPlayer(PhotonView playerPrefab)
     {
-        return Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+
+        return player;
     }
 
-    public void InitGame(GameObject playerPrefab)
+    public void InitGame(PhotonView player)
     {
-        spawner.player = SpawnPlayer(playerPrefab);
+        spawner.player = SpawnPlayer(player);
         spawner.SpawnEnemigos();
     }
 
