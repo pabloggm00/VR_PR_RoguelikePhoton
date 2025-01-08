@@ -112,6 +112,13 @@ public class SpawnEnemies : MonoBehaviour
                 new Vector3(0, halfHeight / 2, 0),
                 new Vector3(roomGenerator.width - 2 * wallMargin, halfHeight - wallMargin, 0)
             );
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(
+                new Vector3(0, 0, 0),
+                new Vector3(roomGenerator.width, roomGenerator.height, 0)
+            );
+
         }
     }
 }
