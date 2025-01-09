@@ -14,25 +14,56 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
 
     private List<PlayerListing> _listings = new List<PlayerListing>();
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+
+    private void Awake()
     {
-        PlayerListing listing = Instantiate(_playerListing, _content);
+        GetCurrentPlayers();
+    }
+
+    private void GetCurrentPlayers()
+    {
+        Debug.Log(PhotonNetwork.CurrentRoom);
+        foreach (KeyValuePair<int, Player> infoPlayer in PhotonNetwork.CurrentRoom.Players)
+        {
+            AddPlayerListing(infoPlayer.Value);
+        }
+
+    }
+
+    private void AddPlayerListing(Player player)
+    {
+        GameObject listingObjct = PhotonNetwork.Instantiate(_playerListing.name, _content.position, _content.rotation) ;
+
+        PlayerListing listing = listingObjct.GetComponent<PlayerListing>();
+
+        listingObjct.transform.SetParent(_content, false);
 
         if (listing != null)
         {
-            listing.SetPlayerInfo(newPlayer);
+            //listing.SetPlayerInfo(player);
+            listing.GetComponent<PhotonView>().RPC("SetPlayerInfo", RpcTarget.All, player);
             _listings.Add(listing);
         }
     }
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+    private void DestroyPlayer(Player player)
     {
-        int index = _listings.FindIndex(x => x.player == otherPlayer);
+        int index = _listings.FindIndex(x => x.player == player);
 
         if (index != 1)
         {
             Destroy(_listings[index].gameObject);
             _listings.RemoveAt(index);
         }
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        AddPlayerListing(newPlayer);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        DestroyPlayer(otherPlayer);
     }
 }

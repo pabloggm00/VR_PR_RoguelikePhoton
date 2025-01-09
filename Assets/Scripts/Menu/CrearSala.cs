@@ -24,6 +24,7 @@ public class CrearSala : MonoBehaviourPunCallbacks
        
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = 2;
+        options.BroadcastPropsChangeToAll = true;
         PhotonNetwork.CreateRoom(roomName.text, options, TypedLobby.Default);
     }
 

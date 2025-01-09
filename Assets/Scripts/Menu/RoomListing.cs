@@ -4,12 +4,16 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class RoomListing : MonoBehaviour
+public class RoomListing : MonoBehaviourPunCallbacks
 {
 
     [SerializeField]
-    private TMP_Text _text;
+    private TMP_Text _roomName;
+
+    [SerializeField]
+    private TMP_Text _roomNumPlayers;
 
     public RoomInfo roomInfo { get; private set; }
 
@@ -19,7 +23,8 @@ public class RoomListing : MonoBehaviour
     {
         _playerName = playerName;
         roomInfo = room;
-        _text.text = room.MaxPlayers + ",  " + room.Name;
+        _roomName.text = room.Name;
+        _roomNumPlayers.text = room.PlayerCount + "/" + room.MaxPlayers;
     }
 
     public void OnClick_JoinRoom()
@@ -27,5 +32,11 @@ public class RoomListing : MonoBehaviour
         PhotonNetwork.NickName = _playerName.text;
         Debug.Log("Bienvenido a la sala " + PhotonNetwork.NickName);
         PhotonNetwork.JoinRoom(roomInfo.Name);
+        
+    }
+
+    public override void OnJoinedRoom()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
