@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -10,60 +11,57 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     private Transform _content;
 
     [SerializeField]
-    private PlayerListing _playerListing;
+    private GameObject _playerListing;
 
     private List<PlayerListing> _listings = new List<PlayerListing>();
 
 
     private void Awake()
     {
-        GetCurrentPlayers();
+        UpdatePlayerList();
     }
 
-    private void GetCurrentPlayers()
+    void UpdatePlayerList()
     {
-        Debug.Log(PhotonNetwork.CurrentRoom);
+
+        foreach (PlayerListing listing in _listings)
+        {
+            Destroy(listing.gameObject);
+        }
+
+        _listings.Clear();
+
+        if (PhotonNetwork.CurrentRoom == null)
+            return;
+
         foreach (KeyValuePair<int, Player> infoPlayer in PhotonNetwork.CurrentRoom.Players)
         {
-            AddPlayerListing(infoPlayer.Value);
-        }
+            GameObject newPlayerObject = Instantiate(_playerListing, _content);
+            PlayerListing newPlayer = newPlayerObject.GetComponentInChildren<PlayerListing>();
 
-    }
+            newPlayer.SetPlayerInfo(infoPlayer.Value);
 
-    private void AddPlayerListing(Player player)
-    {
-        GameObject listingObjct = PhotonNetwork.Instantiate(_playerListing.name, _content.position, _content.rotation) ;
+            if (infoPlayer.Value == PhotonNetwork.LocalPlayer)
+            {
+                newPlayer.ApplyLocalChanges();
+            }
 
-        PlayerListing listing = listingObjct.GetComponent<PlayerListing>();
+            _listings.Add(newPlayer);
 
-        listingObjct.transform.SetParent(_content, false);
-
-        if (listing != null)
-        {
-            //listing.SetPlayerInfo(player);
-            listing.GetComponent<PhotonView>().RPC("SetPlayerInfo", RpcTarget.All, player);
-            _listings.Add(listing);
         }
     }
 
-    private void DestroyPlayer(Player player)
-    {
-        int index = _listings.FindIndex(x => x.player == player);
-
-        if (index != 1)
-        {
-            Destroy(_listings[index].gameObject);
-            _listings.RemoveAt(index);
-        }
-    }
+   
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        AddPlayerListing(newPlayer);
+        //AddPlayerListing(newPlayer);
+        UpdatePlayerList();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        DestroyPlayer(otherPlayer);
+        //DestroyPlayer(otherPlayer);
+        UpdatePlayerList();
     }
 }

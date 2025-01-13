@@ -14,25 +14,35 @@ public class PlayerListing : MonoBehaviourPunCallbacks
     [SerializeField]
     private Image imagePlayer;
 
+    public GameObject rightButton;
+    public GameObject leftButton;
+    public Button playButton;
+
     public List<Sprite> sprites;
 
     ExitGames.Client.Photon.Hashtable playerProperties = new ExitGames.Client.Photon.Hashtable();
 
-    public Player player {  get; private set; }
+    public Player player { get; private set; }
 
     [PunRPC]
-    public void SetPlayerInfo(Player player)
+    public void SetPlayerInfo(Player _player)
     {
-        this.player = player;
-        _namePlayer.text = player.NickName;
+        this.player = _player;
+        _namePlayer.text = _player.NickName;
 
-        imagePlayer.sprite = sprites[0];
+        UpdatePlayerItem(this.player);
+    }
+
+    public void ApplyLocalChanges()
+    {
+        rightButton.SetActive(true);
+        leftButton.SetActive(true);
     }
 
     public void PreviousElement()
     {
 
-        if ((int)playerProperties["playerSprite"] < 0)
+        if ((int)playerProperties["playerSprite"] <= 0)
         {
             playerProperties["playerSprite"] = sprites.Count - 1;
         }
@@ -49,7 +59,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
     public void NextElement()
     {
 
-        if ((int)playerProperties["playerSprite"] >= sprites.Count)
+        if ((int)playerProperties["playerSprite"] >= sprites.Count - 1)
         {
             playerProperties["playerSprite"] = 0;
 
@@ -67,15 +77,15 @@ public class PlayerListing : MonoBehaviourPunCallbacks
     {
         if (player == targetPlayer)
         {
-            UpdatePlayerItem();
+            UpdatePlayerItem(player);
         }
     }
 
-    void UpdatePlayerItem()
+    void UpdatePlayerItem(Player player)
     {
         if (player.CustomProperties.ContainsKey("playerSprite"))
         {
-            imagePlayer.sprite = sprites[(int)playerProperties["playerSprite"]];
+            imagePlayer.sprite = sprites[(int)player.CustomProperties["playerSprite"]];
             playerProperties["playerSprite"] = (int)player.CustomProperties["playerSprite"];
         }
         else
@@ -83,4 +93,26 @@ public class PlayerListing : MonoBehaviourPunCallbacks
             playerProperties["playerSprite"] = 0;
         }
     }
+
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        {
+            playButton.interactable = true;
+        }
+        else
+        {
+            playButton.interactable = false;
+            playButton.gameObject.SetActive(false);
+        }
+    }
+
+    public void OnClickPlayButton()
+    {
+        PhotonNetwork.LoadLevel("Gameplay");
+    }
+
+
 }
+
+
