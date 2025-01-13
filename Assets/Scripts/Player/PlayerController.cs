@@ -1,71 +1,30 @@
-using Unity.VisualScripting;
+using System.Collections;
+using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Velocidad base del personaje
-    public float smoothness = 0.1f; // Suavidad del deslizamiento
 
-    private Rigidbody2D rb;
-    private Vector2 movementInput;
-    private Vector2 currentVelocity; // Para el deslizamiento
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
+    public PlayerSprites spritesSettings;
 
-    private void OnEnable()
+    ElementType tipo;
+    List<Sprite> sprites;
+
+    private void Start()
     {
-        // Conectar las acciones del InputManager
-        InputManager.playerControls.Player.Move.performed += OnMoveInput;
-        InputManager.playerControls.Player.Move.canceled += OnMoveInput;
+        Init();
     }
 
-    private void OnDisable()
+    public void Init()
     {
-        // Desconectar las acciones del InputManager
-        InputManager.playerControls.Player.Move.performed -= OnMoveInput;
-        InputManager.playerControls.Player.Move.canceled -= OnMoveInput;
+        sprites = new List<Sprite>();
+
+        spritesSettings.AgregarSprites(sprites);
+
+        spriteRenderer.sprite = sprites[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]];
+        
+        
     }
-
-    private void OnMoveInput(InputAction.CallbackContext context)
-    {
-        // Leer el movimiento del input
-        movementInput = context.ReadValue<Vector2>();
-
-        UpdateSpriteFlip();
-    }
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    void Update()
-    { 
-        movementInput = movementInput.normalized;
-    }
-
-    void FixedUpdate()
-    {
-        Move();
-    }
-
-    public void UpdateSpriteFlip()
-    {
-        // Flipeamos horizontalmente si disparamos hacia la izquierda o derecha
-        if (movementInput == Vector2.right)
-            spriteRenderer.flipX = false;
-        else if (movementInput == Vector2.left)
-            spriteRenderer.flipX = true;
-
-
-        //tambien hay que hacerlo con el vertical
-    }
-
-    void Move()
-    {
-        rb.velocity = Vector2.SmoothDamp(rb.velocity, movementInput * moveSpeed, ref currentVelocity, smoothness);
-    }
-
 }

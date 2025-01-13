@@ -10,7 +10,7 @@ public class PlayerShoot : MonoBehaviour
     [Header("Configuración del player")]
     public ElementType element;
     public SpriteRenderer spriteRenderer;
-    private PlayerController playerController;
+    private PlayerMove playerMove;
 
     [Header("Configuración de disparo")]
     public float bulletSpeed = 10f; //Velocidad de la bala     
@@ -18,7 +18,7 @@ public class PlayerShoot : MonoBehaviour
     public float shootCooldown = 0.5f; //Daño personaje     
     [SerializeField] private GameObject bulletPrefab; //Para instanciar por si nos quedamos sin ninguna
     [SerializeField] private Transform spawnBullet; //Donde spawnea la bala
-    [SerializeField] private GameObject poolParent; //La piscina que contiene las balas
+    private GameObject poolParent; //La piscina que contiene las balas
     private Vector2 shootDirection = Vector2.zero;
     bool canShoot = true;
 
@@ -41,7 +41,7 @@ public class PlayerShoot : MonoBehaviour
 
     void Start()
     {
-        playerController = GetComponent<PlayerController>();
+        playerMove = GetComponent<PlayerMove>();
         mainCamera = Camera.main;
 
         GetComponent<PlayerHealth>().element = element;
@@ -80,7 +80,7 @@ public class PlayerShoot : MonoBehaviour
     {
         shootDirection = context.ReadValue<Vector2>();
 
-        playerController.UpdateSpriteFlip(); //Recolocamos al personaje
+        playerMove.UpdateSpriteFlip(); //Recolocamos al personaje
     }
 
     void Shoot()

@@ -13,6 +13,8 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject _playerListing;
 
+    public GameObject playButton;
+
     private List<PlayerListing> _listings = new List<PlayerListing>();
 
 
@@ -64,4 +66,22 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
         //DestroyPlayer(otherPlayer);
         UpdatePlayerList();
     }
+
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
+        {
+            playButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            playButton.gameObject.SetActive(false);
+        }
+    }
+
+    public void OnClickPlayButton()
+    {
+        PhotonNetwork.LoadLevel("Gameplay");
+    }
+
 }

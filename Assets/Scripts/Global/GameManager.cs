@@ -5,8 +5,16 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
+    public static GameManager instance;
+
     public RoomGenerator roomGenerator;
     public PhotonView player;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -16,8 +24,8 @@ public class GameManager : MonoBehaviour
 
     void InitWorld()
     {
-        roomGenerator.GenerateRoom();
-        //roomGenerator.InitGame(player);
+       // roomGenerator.GenerateRoom();
+        roomGenerator.InitGame(player);
     }
 
     private void Update()

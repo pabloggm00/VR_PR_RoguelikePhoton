@@ -16,13 +16,21 @@ public class PlayerListing : MonoBehaviourPunCallbacks
 
     public GameObject rightButton;
     public GameObject leftButton;
-    public Button playButton;
 
-    public List<Sprite> sprites;
+
+    public PlayerSprites playerSpritesSettings;
+    private List<Sprite> sprites;
 
     ExitGames.Client.Photon.Hashtable playerProperties = new ExitGames.Client.Photon.Hashtable();
 
     public Player player { get; private set; }
+
+    private void Start()
+    {
+        sprites = new List<Sprite>();
+
+        playerSpritesSettings.AgregarSprites(sprites);
+    }
 
     [PunRPC]
     public void SetPlayerInfo(Player _player)
@@ -94,23 +102,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         }
     }
 
-    private void Update()
-    {
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
-        {
-            playButton.interactable = true;
-        }
-        else
-        {
-            playButton.interactable = false;
-            playButton.gameObject.SetActive(false);
-        }
-    }
-
-    public void OnClickPlayButton()
-    {
-        PhotonNetwork.LoadLevel("Gameplay");
-    }
+   
 
 
 }

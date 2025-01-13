@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3286487813137507711}
   - component: {fileID: 7427133847649038961}
+  - component: {fileID: -8173608288237632845}
   - component: {fileID: 985319786636924373}
   - component: {fileID: 7719233150306250859}
   - component: {fileID: 1428801546976960241}
@@ -112,7 +113,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 103
-  m_Sprite: {fileID: 21300000, guid: 25077c8d052a2d24d8d13efea8fdbbe0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 93d80b0f60a809542b3084a589c74d67, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123,6 +124,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-8173608288237632845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6992864544089632955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94b5e0d86afcf84bb8dbc705bcdc347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 7427133847649038961}
+  spritesSettings: {fileID: 11400000, guid: 32261cec496a97e4d89f15a7ccbdc22f, type: 2}
 --- !u!114 &985319786636924373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,7 +171,6 @@ MonoBehaviour:
   shootCooldown: 0.5
   bulletPrefab: {fileID: 3900483824530595001, guid: bbf1fc3e34243264b9025db5a23d3846, type: 3}
   spawnBullet: {fileID: 2424815961601057470}
-  poolParent: {fileID: 0}
 --- !u!114 &1428801546976960241
 MonoBehaviour:
   m_ObjectHideFlags: 0

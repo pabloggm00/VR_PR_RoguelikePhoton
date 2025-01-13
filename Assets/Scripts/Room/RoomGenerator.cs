@@ -24,7 +24,6 @@ public class RoomGenerator : MonoBehaviour
     GameObject SpawnPlayer(PhotonView playerPrefab)
     {
         GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
-
         return player;
     }
 
@@ -32,6 +31,8 @@ public class RoomGenerator : MonoBehaviour
     {
         spawner.player = SpawnPlayer(player);
         spawner.SpawnEnemigos();
+
+        GenerateRoom();
     }
 
     public void GenerateRoom()

@@ -10,12 +10,12 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.ConnectUsingSettings();
     }
 
     private void Start()
     {
-        PhotonNetwork.JoinRandomOrCreateRoom();
+        //PhotonNetwork.JoinRandomOrCreateRoom();
     }
 
     public override void OnConnectedToMaster()
