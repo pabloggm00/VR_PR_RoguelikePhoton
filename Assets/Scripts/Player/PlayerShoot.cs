@@ -8,7 +8,7 @@ public class PlayerShoot : MonoBehaviour
 {
 
     [Header("Configuración del player")]
-    public ElementType element;
+    PlayerController controller;
     public SpriteRenderer spriteRenderer;
     private PlayerMove playerMove;
 
@@ -42,11 +42,8 @@ public class PlayerShoot : MonoBehaviour
     void Start()
     {
         playerMove = GetComponent<PlayerMove>();
+        controller = GetComponent<PlayerController>();
         mainCamera = Camera.main;
-
-        GetComponent<PlayerHealth>().element = element;
-
-        spriteRenderer.color = ElementsInteractions.GetElementColor(element);
 
         poolParent = new GameObject("Pool Parent");
     }
@@ -121,7 +118,7 @@ public class PlayerShoot : MonoBehaviour
         chosenBullet.SetActive(true);
 
         Bullet bulletScript = chosenBullet.GetComponent<Bullet>();
-        bulletScript.Setup(shootDirection.normalized, bulletSpeed, bulletDamage, element);
+        bulletScript.Setup(shootDirection.normalized, bulletSpeed, bulletDamage, controller.tipo.elementType);
 
         StartCoroutine(CooldownShoot());
     }

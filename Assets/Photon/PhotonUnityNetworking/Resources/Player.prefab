@@ -138,6 +138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 7427133847649038961}
   spritesSettings: {fileID: 11400000, guid: 32261cec496a97e4d89f15a7ccbdc22f, type: 2}
+  tipo: {fileID: 0}
 --- !u!114 &985319786636924373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,7 +165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12d9252da8424f84786213fecf35abc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  element: 1
   spriteRenderer: {fileID: 7427133847649038961}
   bulletSpeed: 10
   bulletDamage: 1
@@ -190,7 +190,6 @@ MonoBehaviour:
   damageBlinkDuration: 0.1
   damageBlinkDurationAndInvulnerableOffset: 0.3
   damageBlinkCount: 3
-  element: 0
 --- !u!50 &3524614158542804784
 Rigidbody2D:
   serializedVersion: 4

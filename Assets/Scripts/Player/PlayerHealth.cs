@@ -17,13 +17,13 @@ public class PlayerHealth : MonoBehaviour
     public float damageBlinkDurationAndInvulnerableOffset = 0.1f; // Duración del parpadeo
     public int damageBlinkCount = 3; // Cantidad de parpadeos
 
-    [HideInInspector]
-    public ElementType element;
+    PlayerController controller;
 
     private bool isInvulnerable = false; 
 
     private void Start()
     {
+        controller = GetComponent<PlayerController>();
         currentHealth = maxHealth;
     }
 
@@ -31,7 +31,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isInvulnerable) return;
 
-        float elementDamage = damage * ElementsInteractions.GetDamageMultiplier(enemyElement, element);
+        float elementDamage = damage * ElementsInteractions.GetDamageMultiplier(enemyElement, controller.tipo.elementType);
 
         currentHealth -= damage;
 

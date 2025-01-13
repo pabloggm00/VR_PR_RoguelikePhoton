@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public PlayerSprites spritesSettings;
 
-    ElementType tipo;
-    List<Sprite> sprites;
+    public ElementSprite tipo;
+    List<ElementSprite> elementSpritePlayer;
 
     private void Start()
     {
@@ -19,12 +19,18 @@ public class PlayerController : MonoBehaviour
 
     public void Init()
     {
-        sprites = new List<Sprite>();
+        elementSpritePlayer = new List<ElementSprite>();
 
-        spritesSettings.AgregarSprites(sprites);
+        spritesSettings.AgregarSprites(elementSpritePlayer);
 
-        spriteRenderer.sprite = sprites[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]];
-        
-        
+        Debug.Log((int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
+        tipo = elementSpritePlayer[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]];
+        spriteRenderer.sprite = tipo.sprite;
+
+    }
+
+    public void ChangeElement(ElementSprite tipoACambiar)
+    {
+        tipo = tipoACambiar;
     }
 }

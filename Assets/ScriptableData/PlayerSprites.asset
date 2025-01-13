@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e5b567143a87b14086d1b9495e7bdab, type: 3}
   m_Name: PlayerSprites
   m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: 93d80b0f60a809542b3084a589c74d67, type: 3}
-  - {fileID: 21300000, guid: 265b0d957e236d141906ea71e0710d94, type: 3}
-  - {fileID: 21300000, guid: 7dcad36c96e04104c9a41aa71311dbce, type: 3}
-  - {fileID: 21300000, guid: 7c3f3bf2175e16041b56f110b7df778d, type: 3}
+  elementSprites:
+  - {fileID: 11400000, guid: 8cca56457281fd54099ccea6ffaf55be, type: 2}
+  - {fileID: 11400000, guid: f8090956f5aef9e4381d8cbd7c4e7c8d, type: 2}
+  - {fileID: 11400000, guid: bb30d305a10470c4d9273b3c9db1784e, type: 2}
+  - {fileID: 11400000, guid: f21835b757287c04c8d09a5af2ec3601, type: 2}

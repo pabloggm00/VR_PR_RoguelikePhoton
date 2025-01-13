@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     public float hP;
     public int damage;
-    public ElementType element;
+    public ElementSprite element;
     public SpriteRenderer spriteRenderer;
 
     public float currentHP;
@@ -20,7 +20,6 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         currentHP = hP;
-        spriteRenderer.color = ElementsInteractions.GetElementColor(element);
 
         damageEffect = GetComponent<DamageEffect>();
         damageEffect.Init(spriteRenderer);
@@ -29,7 +28,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int dmg, ElementType bulletElement)
     {
-        float elementDamage = dmg * ElementsInteractions.GetDamageMultiplier(bulletElement, element);
+        float elementDamage = dmg * element.GetMultiplierDamage(bulletElement);
 
         currentHP -= elementDamage;
 
@@ -54,7 +53,7 @@ public class Enemy : MonoBehaviour
         if (collision.TryGetComponent<PlayerHealth>(out PlayerHealth player))
         {
             Debug.Log("Hola");
-            player.TakeDamage(damage, element);
+            player.TakeDamage(damage, element.elementType);
         }
 
        

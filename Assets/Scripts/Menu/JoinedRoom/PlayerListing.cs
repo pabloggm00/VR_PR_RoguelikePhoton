@@ -19,7 +19,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
 
 
     public PlayerSprites playerSpritesSettings;
-    private List<Sprite> sprites;
+    public List<ElementSprite> sprites;
 
     ExitGames.Client.Photon.Hashtable playerProperties = new ExitGames.Client.Photon.Hashtable();
 
@@ -27,7 +27,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        sprites = new List<Sprite>();
+        sprites = new List<ElementSprite>();
 
         playerSpritesSettings.AgregarSprites(sprites);
     }
@@ -61,6 +61,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
 
 
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+
         //imagePlayer.sprite = sprites[currentSpriteIndex]; 
     }
 
@@ -93,7 +94,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
     {
         if (player.CustomProperties.ContainsKey("playerSprite"))
         {
-            imagePlayer.sprite = sprites[(int)player.CustomProperties["playerSprite"]];
+            imagePlayer.sprite = sprites[(int)player.CustomProperties["playerSprite"]].sprite;
             playerProperties["playerSprite"] = (int)player.CustomProperties["playerSprite"];
         }
         else

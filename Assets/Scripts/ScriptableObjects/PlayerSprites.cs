@@ -6,13 +6,13 @@ using UnityEngine;
 public class PlayerSprites : ScriptableObject
 {
 
-    public List<Sprite> sprites;
+    public List<ElementSprite> elementSprites;
 
-    public void AgregarSprites(List<Sprite> playerSprites)
+    public void AgregarSprites(List<ElementSprite> playerSprites)
     {
-        foreach (Sprite sprite in sprites)
+        foreach (ElementSprite element in elementSprites)
         {
-            playerSprites.Add(sprite);
+            playerSprites.Add(element);
         }
     }
 }
