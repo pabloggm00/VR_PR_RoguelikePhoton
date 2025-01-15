@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
 
     public SpriteRenderer spriteRenderer;
@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
         spritesSettings.AgregarSprites(elementSpritePlayer);
 
-        Debug.Log((int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
+        Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
         tipo = elementSpritePlayer[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]];
         spriteRenderer.sprite = tipo.sprite;
 

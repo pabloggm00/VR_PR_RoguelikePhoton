@@ -25,6 +25,12 @@ public class Enemy : MonoBehaviour
         damageEffect.Init(spriteRenderer);
     }
 
+    ElementSprite GetRandomElement()
+    {
+        
+
+        return element;
+    }
 
     public void TakeDamage(int dmg, ElementType bulletElement)
     {

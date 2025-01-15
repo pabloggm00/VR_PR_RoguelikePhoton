@@ -6,26 +6,26 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    public static GameManager instance;
+    public static GameManager instance {  get; private set; } 
 
-    public RoomGenerator roomGenerator;
-    public PhotonView player;
+    
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
     {
-
-        InitWorld();
-    }
-
-    void InitWorld()
-    {
-       // roomGenerator.GenerateRoom();
-        roomGenerator.InitGame(player);
+        
     }
 
     private void Update()

@@ -332,6 +332,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &798543679
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 798543680}
+  - component: {fileID: 798543681}
+  m_Layer: 0
+  m_Name: GameplayManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &798543680
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798543679}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &798543681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798543679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da6269afa14538d4582875b5ba019dbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomGenerator: {fileID: 84014395}
+  player: {fileID: 2683048307887203669, guid: f9a809ddc47611045b3d339db2f442ae, type: 3}
 --- !u!1 &1302872748
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,8 +453,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1bbdd4123f767541b86b65bbf78aba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomGenerator: {fileID: 84014395}
-  player: {fileID: 2683048307887203669, guid: f9a809ddc47611045b3d339db2f442ae, type: 3}
 --- !u!1 &1702813942
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,3 +656,4 @@ SceneRoots:
   - {fileID: 1876142572}
   - {fileID: 2041951957}
   - {fileID: 1943813655}
+  - {fileID: 798543680}

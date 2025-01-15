@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hP: 10
   damage: 2
-  element: 2
+  element: {fileID: 11400000, guid: 8cca56457281fd54099ccea6ffaf55be, type: 2}
   spriteRenderer: {fileID: 7804442946518326888}
   currentHP: 0
 --- !u!114 &1432487841808373997

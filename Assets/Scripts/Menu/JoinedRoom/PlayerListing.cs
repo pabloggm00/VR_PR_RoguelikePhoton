@@ -39,6 +39,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         _namePlayer.text = _player.NickName;
 
         UpdatePlayerItem(this.player);
+      
     }
 
     public void ApplyLocalChanges()
@@ -86,6 +87,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
     {
         if (player == targetPlayer)
         {
+       
             UpdatePlayerItem(player);
         }
     }
@@ -100,7 +102,10 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         else
         {
             playerProperties["playerSprite"] = 0;
+            PhotonNetwork.SetPlayerCustomProperties(playerProperties);
         }
+
+       
     }
 
    

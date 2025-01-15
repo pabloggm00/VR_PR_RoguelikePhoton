@@ -25,8 +25,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        GameObject player = PhotonNetwork.Instantiate(gameManager.player.name, gameManager.roomGenerator.spawnPlayer.position, Quaternion.identity);
-
-        player.GetComponent<PhotonView>().RPC("SetNameText", RpcTarget.AllBuffered, PlayerPrefs.GetString("PlayerName"));
+        GameObject player = PhotonNetwork.Instantiate(GameplayManager.instance.player.name, GameplayManager.instance.roomGenerator.spawnPlayer.position, Quaternion.identity);
+      
+        //player.GetComponent<PhotonView>().RPC("SetNameText", RpcTarget.AllBuffered, PlayerPrefs.GetString("PlayerName"));
     }
 }
