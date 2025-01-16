@@ -60,7 +60,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
-        if (photonView.IsMine) 
+        if (photonView.IsMine)
             Move();
     }
 

@@ -20,7 +20,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Init();
+        //Init();
+        if (photonView.IsMine){
+
+            GetComponent<PhotonView>().RPC("Init", RpcTarget.All, (int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
+        }
 
         maxSouls = GameplayManager.instance.soulsNeeded;
 
@@ -32,13 +36,16 @@ public class PlayerController : MonoBehaviourPunCallbacks
         AddSoul(ElementType.Agua, 2);
     }
 
-    public void Init()
+    [PunRPC]
+    public void Init(int sprite)
     {
         elementSpritePlayer = new List<ElementSprite>();
 
         spritesSettings.AgregarSprites(elementSpritePlayer);
 
-        elementCurrent = elementSpritePlayer[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]];
+        elementCurrent = elementSpritePlayer[sprite];
+        //elementCurrent = elementSpritePlayer[PlayerPrefs.GetInt("IndexSprite")];
+        Debug.Log(PlayerPrefs.GetInt("IndexSprite"));
         spriteRenderer.sprite = elementCurrent.sprite;
 
     }

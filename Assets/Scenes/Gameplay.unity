@@ -176,8 +176,6 @@ MonoBehaviour:
   floorParent: {fileID: 1702813942}
   wallPrefab: {fileID: 5026479395812677193, guid: 218c4f1ddcc2a3c4fabffd293b07c7ff, type: 3}
   wallParent: {fileID: 494911854}
-  doorPrefab: {fileID: 7216592805448059171, guid: 7d556731c85a514468db9b29d301aaed, type: 3}
-  doorParent: {fileID: 1302872748}
   spawner: {fileID: 84014396}
   spawnPlayer: {fileID: 2041951957}
 --- !u!114 &84014396
@@ -847,7 +845,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillAmount: 0.16
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0

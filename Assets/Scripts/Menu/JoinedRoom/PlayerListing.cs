@@ -30,6 +30,16 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         sprites = new List<ElementSprite>();
 
         playerSpritesSettings.AgregarSprites(sprites);
+
+ 
+        StartCoroutine(DelaySettings());
+    }
+
+    IEnumerator DelaySettings()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        UpdatePlayerItem(this.player);
     }
 
 
@@ -38,7 +48,6 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         this.player = _player;
         _namePlayer.text = _player.NickName;
 
-        UpdatePlayerItem(this.player);
       
     }
 
@@ -62,8 +71,6 @@ public class PlayerListing : MonoBehaviourPunCallbacks
 
 
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
-
-        //imagePlayer.sprite = sprites[currentSpriteIndex]; 
     }
 
     public void NextElement()
@@ -78,8 +85,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         {
             playerProperties["playerSprite"] = (int)playerProperties["playerSprite"] + 1;
         }
-        //imagePlayer.sprite = sprites[currentSpriteIndex];
-
+ 
         PhotonNetwork.SetPlayerCustomProperties(playerProperties);
     }
 
@@ -102,7 +108,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         else
         {
             playerProperties["playerSprite"] = 0;
-            //PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+            PhotonNetwork.SetPlayerCustomProperties(playerProperties);
 
         }
 

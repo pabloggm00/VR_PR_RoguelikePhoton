@@ -81,6 +81,7 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
 
     public void OnClickPlayButton()
     {
+        PlayerPrefs.SetInt("IndexSprite", (int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
         PhotonNetwork.LoadLevel("Gameplay");
     }
 

@@ -28,6 +28,7 @@ public class RoomGenerator : MonoBehaviour
     public void InitGame(PhotonView player)
     {
         spawner.player = SpawnPlayer(player);
+        
         spawner.SpawnEnemigos();
 
         GenerateRoom();
