@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -14,10 +15,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
     List<ElementSprite> elementSpritePlayer;
 
     private Dictionary<ElementType, int> elementSouls = new Dictionary<ElementType, int>();
+    int maxSouls;
+    public static event Action<ElementType, int> UpdateSoulHUD;
 
     private void Start()
     {
         Init();
+
+        maxSouls = GameplayManager.instance.soulsNeeded;
 
         foreach (ElementSprite element in spritesSettings.elementSprites)
         {
@@ -46,6 +51,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public void AddSoul(ElementType tipo, int cantidad)
     {
         elementSouls[tipo] += cantidad;
+
+        if (elementSouls[tipo] > maxSouls)
+        {
+            elementSouls[tipo] = maxSouls;
+        }
+
+        UpdateSoulHUD?.Invoke(tipo, cantidad);
     }
 
 }

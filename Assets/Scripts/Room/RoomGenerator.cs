@@ -14,8 +14,6 @@ public class RoomGenerator : MonoBehaviour
     public GameObject floorParent; // Prefab del suelo
     public GameObject wallPrefab;  // Prefab del muro
     public GameObject wallParent;  // Prefab del muro
-    public GameObject doorPrefab;  // Prefab de la puerta
-    public GameObject doorParent;  // Prefab de la puerta
 
     [Header("Spawner")]
     public SpawnEnemies spawner;
@@ -51,13 +49,6 @@ public class RoomGenerator : MonoBehaviour
                 if (x == -halfWidth || x == halfWidth || y == -halfHeight || y == halfHeight)
                 {
 
-                    // No colocar muros donde van las puertas
-                    if ((y == 0 && (x == -halfWidth || x == halfWidth)) ||
-                        (x == 0 && (y == -halfHeight || y == halfHeight)))
-                    {
-                        continue;
-                    }
-
                     Instantiate(wallPrefab, position, Quaternion.identity, wallParent.transform);
                 }
                 else
@@ -69,16 +60,6 @@ public class RoomGenerator : MonoBehaviour
 
             }
         }
-
-        // Colocar puertas (centradas en cada pared)
-        CreateDoor(new Vector3(0, halfHeight, 0));   // Puerta superior
-        CreateDoor(new Vector3(0, -halfHeight, 0));  // Puerta inferior
-        CreateDoor(new Vector3(halfWidth, 0, 0));    // Puerta derecha
-        CreateDoor(new Vector3(-halfWidth, 0, 0));   // Puerta izquierda
     }
 
-    void CreateDoor(Vector3 position)
-    {
-        Instantiate(doorPrefab, position, Quaternion.identity, doorParent.transform);
-    }
 }

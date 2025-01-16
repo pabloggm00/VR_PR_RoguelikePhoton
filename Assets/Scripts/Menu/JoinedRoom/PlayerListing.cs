@@ -32,7 +32,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         playerSpritesSettings.AgregarSprites(sprites);
     }
 
-    [PunRPC]
+
     public void SetPlayerInfo(Player _player)
     {
         this.player = _player;
@@ -102,7 +102,8 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         else
         {
             playerProperties["playerSprite"] = 0;
-            PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+            //PhotonNetwork.SetPlayerCustomProperties(playerProperties);
+
         }
 
        

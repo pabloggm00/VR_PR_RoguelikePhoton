@@ -10,6 +10,9 @@ public class GameplayManager : MonoBehaviour
     public RoomGenerator roomGenerator;
     public PhotonView player;
 
+
+    public int soulsNeeded = 5;
+
     private void Awake()
     {
         instance = this;
@@ -39,7 +42,7 @@ public class GameplayManager : MonoBehaviour
         }
 
         return 1.0f;
-
-
     }
+
+
 }

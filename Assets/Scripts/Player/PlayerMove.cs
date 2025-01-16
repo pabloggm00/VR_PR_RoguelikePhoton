@@ -1,9 +1,10 @@
+using Photon.Pun;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPunCallbacks
 {
     public float moveSpeed = 5f; // Velocidad base del personaje
     public float smoothness = 0.1f; // Suavidad del deslizamiento
@@ -13,18 +14,25 @@ public class PlayerMove : MonoBehaviour
     private Vector2 currentVelocity; // Para el deslizamiento
     private SpriteRenderer spriteRenderer;
 
-    private void OnEnable()
+    public override void OnEnable()
     {
-        // Conectar las acciones del InputManager
-        InputManager.playerControls.Player.Move.performed += OnMoveInput;
-        InputManager.playerControls.Player.Move.canceled += OnMoveInput;
+        if (photonView.IsMine)
+        {
+            // Conectar las acciones del InputManager
+            InputManager.playerControls.Player.Move.performed += OnMoveInput;
+            InputManager.playerControls.Player.Move.canceled += OnMoveInput;
+        }
     }
 
-    private void OnDisable()
+    public override void OnDisable()
     {
-        // Desconectar las acciones del InputManager
-        InputManager.playerControls.Player.Move.performed -= OnMoveInput;
-        InputManager.playerControls.Player.Move.canceled -= OnMoveInput;
+        if (photonView.IsMine)
+        {
+            // Desconectar las acciones del InputManager
+            InputManager.playerControls.Player.Move.performed -= OnMoveInput;
+            InputManager.playerControls.Player.Move.canceled -= OnMoveInput;
+        }
+           
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
@@ -32,7 +40,11 @@ public class PlayerMove : MonoBehaviour
         // Leer el movimiento del input
         movementInput = context.ReadValue<Vector2>();
 
-        UpdateSpriteFlip();
+        if (photonView.IsMine)
+        {
+            photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, null);
+        }
+      
     }
 
     void Start()
@@ -48,9 +60,11 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        Move();
+        if (photonView.IsMine) 
+            Move();
     }
 
+    [PunRPC]
     public void UpdateSpriteFlip()
     {
         // Flipeamos horizontalmente si disparamos hacia la izquierda o derecha
