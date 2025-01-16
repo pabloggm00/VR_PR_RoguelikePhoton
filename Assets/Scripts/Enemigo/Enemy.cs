@@ -6,11 +6,12 @@ public class Enemy : MonoBehaviour
 {
     public float hP;
     public int damage;
-    public ElementSprite element;
     public SpriteRenderer spriteRenderer;
+    public PlayerSprites enemySpritesSettings;
 
-    public float currentHP;
-
+    private float currentHP;
+    private List<ElementSprite> elements;
+    private ElementSprite elementCurrent;
     private DamageEffect damageEffect;
 
     // Evento para notificar al spawner
@@ -23,18 +24,24 @@ public class Enemy : MonoBehaviour
 
         damageEffect = GetComponent<DamageEffect>();
         damageEffect.Init(spriteRenderer);
+
+        elements = new List<ElementSprite>();
+
+        enemySpritesSettings.AgregarSprites(elements);
+
+        elementCurrent = GetRandomElement();
     }
 
     ElementSprite GetRandomElement()
     {
-        
+        int rnd = Random.Range(0, elements.Count);
 
-        return element;
+        return elements[rnd];
     }
 
     public void TakeDamage(int dmg, ElementType bulletElement)
     {
-        float elementDamage = dmg * element.GetMultiplierDamage(bulletElement);
+        float elementDamage = dmg * elementCurrent.GetMultiplierDamage(bulletElement);
 
         currentHP -= elementDamage;
 
@@ -58,8 +65,7 @@ public class Enemy : MonoBehaviour
 
         if (collision.TryGetComponent<PlayerHealth>(out PlayerHealth player))
         {
-            Debug.Log("Hola");
-            player.TakeDamage(damage, element.elementType);
+            player.TakeDamage(damage, elementCurrent.elementType);
         }
 
        

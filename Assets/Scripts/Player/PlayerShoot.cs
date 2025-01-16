@@ -118,7 +118,7 @@ public class PlayerShoot : MonoBehaviour
         chosenBullet.SetActive(true);
 
         Bullet bulletScript = chosenBullet.GetComponent<Bullet>();
-        bulletScript.Setup(shootDirection.normalized, bulletSpeed, bulletDamage, controller.tipo.elementType);
+        bulletScript.Setup(shootDirection.normalized, bulletSpeed, bulletDamage, controller.elementCurrent.elementType);
 
         StartCoroutine(CooldownShoot());
     }

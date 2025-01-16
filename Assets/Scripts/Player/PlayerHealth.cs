@@ -31,7 +31,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isInvulnerable) return;
 
-        float elementDamage = damage * ElementsInteractions.GetDamageMultiplier(enemyElement, controller.tipo.elementType);
+        float elementDamage = damage * controller.elementCurrent.GetMultiplierDamage(enemyElement);
 
         currentHealth -= damage;
 

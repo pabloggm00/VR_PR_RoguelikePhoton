@@ -9,12 +9,22 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public SpriteRenderer spriteRenderer;
     public PlayerSprites spritesSettings;
 
-    public ElementSprite tipo;
+    
+    public ElementSprite elementCurrent {  get; private set; }
     List<ElementSprite> elementSpritePlayer;
+
+    private Dictionary<ElementType, int> elementSouls = new Dictionary<ElementType, int>();
 
     private void Start()
     {
         Init();
+
+        foreach (ElementSprite element in spritesSettings.elementSprites)
+        {
+            elementSouls.Add(element.elementType, 0);
+        }
+
+        AddSoul(ElementType.Agua, 2);
     }
 
     public void Init()
@@ -23,14 +33,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         spritesSettings.AgregarSprites(elementSpritePlayer);
 
-        Debug.Log(PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
-        tipo = elementSpritePlayer[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]];
-        spriteRenderer.sprite = tipo.sprite;
+        elementCurrent = elementSpritePlayer[(int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]];
+        spriteRenderer.sprite = elementCurrent.sprite;
 
     }
 
     public void ChangeElement(ElementSprite tipoACambiar)
     {
-        tipo = tipoACambiar;
+        elementCurrent = tipoACambiar;
     }
+
+    public void AddSoul(ElementType tipo, int cantidad)
+    {
+        elementSouls[tipo] += cantidad;
+    }
+
 }

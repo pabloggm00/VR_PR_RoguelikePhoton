@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 3435048636020288060}
   - component: {fileID: -4633892327205582679}
   m_Layer: 0
-  m_Name: Enemigo
+  m_Name: Enemigo1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5558169003926074543}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -150,9 +150,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hP: 10
   damage: 2
-  element: {fileID: 11400000, guid: 8cca56457281fd54099ccea6ffaf55be, type: 2}
   spriteRenderer: {fileID: 7804442946518326888}
-  currentHP: 0
+  enemySpritesSettings: {fileID: 11400000, guid: 30d4ca9968335fa459b7bd9789316a57, type: 2}
 --- !u!114 &1432487841808373997
 MonoBehaviour:
   m_ObjectHideFlags: 0

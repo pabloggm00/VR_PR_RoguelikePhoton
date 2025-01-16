@@ -7,6 +7,7 @@ public class EnemyMovement : MonoBehaviour
     [Header("Movimiento")]
     public float moveSpeed = 2f;
 
+    [HideInInspector]
     public GameObject target; 
 
     private Rigidbody2D rb; 
