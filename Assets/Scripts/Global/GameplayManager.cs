@@ -10,8 +10,10 @@ public class GameplayManager : MonoBehaviour
     public RoomGenerator roomGenerator;
     public PhotonView player;
 
-
+    public GameObject poolParent;
     public int soulsNeeded = 5;
+
+    public List<GameObject> playersInGame = new List<GameObject>();
 
     private void Awake()
     {
@@ -30,19 +32,9 @@ public class GameplayManager : MonoBehaviour
         roomGenerator.InitGame(player);
     }
 
-    public float GetMultiplierDamage(ElementSprite myElement, ElementType enemyElement)
+    public void AgregarJugador(GameObject player)
     {
-        if (enemyElement == myElement.debilidad)
-        {
-            return 2.0f;
-        }
-        else if (enemyElement == myElement.resistente)
-        {
-            return 0.5f;
-        }
-
-        return 1.0f;
+        playersInGame.Add(player);
     }
-
 
 }

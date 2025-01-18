@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -11,7 +12,7 @@ public class Bullet : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
 
-
+    [PunRPC]
     public void Setup(Vector2 shootDirection, float bulletSpeed, int playerDamage, ElementType playerElement)
     {
         direction = shootDirection;
@@ -37,16 +38,16 @@ public class Bullet : MonoBehaviour
 
         if (collision.TryGetComponent<Enemy>(out Enemy enemigo)) 
         {
-            enemigo.TakeDamage(damage, type);
+            enemigo.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.All, damage, type);
         }
         
         // Colisión con cualquier objeto, desactiva la bala
-        DesactivateBullet();
+        GetComponent<PhotonView>().RPC("DesactivateBullet", RpcTarget.All, null);
     }
 
-    
 
-    private void DesactivateBullet()
+    [PunRPC]
+    public void DesactivateBullet()
     {
         gameObject.SetActive(false); // Desactivar la bala
     }

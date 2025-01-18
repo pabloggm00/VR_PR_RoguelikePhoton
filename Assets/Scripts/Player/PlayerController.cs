@@ -20,39 +20,33 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        //Init();
-        if (photonView.IsMine){
-
-            GetComponent<PhotonView>().RPC("Init", RpcTarget.All, (int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
-        }
-
-        maxSouls = GameplayManager.instance.soulsNeeded;
-
-        foreach (ElementSprite element in spritesSettings.elementSprites)
-        {
-            elementSouls.Add(element.elementType, 0);
-        }
-
-        AddSoul(ElementType.Agua, 2);
+        
     }
 
     [PunRPC]
-    public void Init(int sprite)
+    public void Init(int spriteIndex)
     {
-        elementSpritePlayer = new List<ElementSprite>();
+        elementSpritePlayer = new List<ElementSprite>(); //creo la lista de ls sprites
 
-        spritesSettings.AgregarSprites(elementSpritePlayer);
+        spritesSettings.AgregarSprites(elementSpritePlayer); //agrego los sprites
 
-        elementCurrent = elementSpritePlayer[sprite];
-        //elementCurrent = elementSpritePlayer[PlayerPrefs.GetInt("IndexSprite")];
-        Debug.Log(PlayerPrefs.GetInt("IndexSprite"));
-        spriteRenderer.sprite = elementCurrent.sprite;
+        elementCurrent = elementSpritePlayer[spriteIndex]; //seteo el tipo
+
+        spriteRenderer.sprite = elementCurrent.sprite; //seteo el spite
+
+        maxSouls = GameplayManager.instance.soulsNeeded; //cantidad máxima de recolectar souls
+
+        foreach (ElementSprite element in spritesSettings.elementSprites)
+        {
+            elementSouls.Add(element.elementType, 0); //agrego el diccionario los distintos souls con su cantidad inicial
+        }
 
     }
 
     public void ChangeElement(ElementSprite tipoACambiar)
     {
         elementCurrent = tipoACambiar;
+        spriteRenderer.sprite = tipoACambiar.sprite;
     }
 
     public void AddSoul(ElementType tipo, int cantidad)

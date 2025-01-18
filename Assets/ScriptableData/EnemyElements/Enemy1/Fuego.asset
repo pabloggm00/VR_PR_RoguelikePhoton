@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54554d1926f9b424a8fe06c09dfc4c41, type: 3}
   m_Name: Fuego
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 328fd3533c381aa439559948dabe6edd, type: 3}
   elementType: 1
   debilidad: 3
   resistente: 2

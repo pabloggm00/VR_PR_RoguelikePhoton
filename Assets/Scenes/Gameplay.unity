@@ -132,7 +132,6 @@ GameObject:
   m_Component:
   - component: {fileID: 84014394}
   - component: {fileID: 84014395}
-  - component: {fileID: 84014396}
   m_Layer: 0
   m_Name: RoomGenerator
   m_TagString: Untagged
@@ -176,37 +175,8 @@ MonoBehaviour:
   floorParent: {fileID: 1702813942}
   wallPrefab: {fileID: 5026479395812677193, guid: 218c4f1ddcc2a3c4fabffd293b07c7ff, type: 3}
   wallParent: {fileID: 494911854}
-  spawner: {fileID: 84014396}
+  spawnerPrefab: {fileID: 2636239115738529065, guid: 56e82dfa95644184ab6971825f0d1cd5, type: 3}
   spawnPlayer: {fileID: 2041951957}
---- !u!114 &84014396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 84014393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4dc25e6462f25147848505a5dd117e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnArea:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 8.84
-    height: 4.98
-  minEnemies: 1
-  maxEnemies: 3
-  regularEnemies:
-  - {fileID: 5558169003926074543, guid: 1efdc04ec0031474cb0bcc9157339d07, type: 3}
-  - {fileID: 5558169003926074543, guid: b245b55a58028c74b9aff67af2baca5c, type: 3}
-  bossEnemy: {fileID: 5558169003926074543, guid: 1efdc04ec0031474cb0bcc9157339d07, type: 3}
-  roundsUntilBoss: 3
-  roundPauseDuration: 2
-  roomGenerator: {fileID: 84014395}
-  wallMargin: 2
-  player: {fileID: 0}
 --- !u!1 &246223143
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,7 +752,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomGenerator: {fileID: 84014395}
   player: {fileID: 2683048307887203669, guid: f9a809ddc47611045b3d339db2f442ae, type: 3}
+  poolParent: {fileID: 0}
   soulsNeeded: 5
+  playersInGame: []
 --- !u!1 &857144426
 GameObject:
   m_ObjectHideFlags: 0
@@ -2442,7 +2414,7 @@ Transform:
   m_GameObject: {fileID: 2041951956}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -2.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

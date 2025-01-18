@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class SpawnEnemies : MonoBehaviour
 {
     [Header("Configuración de Spawn")]
-    public Rect spawnArea; 
     public int minEnemies = 1;
     public int maxEnemies = 3;
 
@@ -36,11 +36,33 @@ public class SpawnEnemies : MonoBehaviour
         Enemy.OnEnemyDeath -= HandleEnemyDeath;
     }
 
+
+    private void Start()
+    {
+        if (roomGenerator == null)
+        {
+            Debug.LogWarning("RoomGenerator aún no configurado al inicio.");
+        }
+    }
+
+    public void SetRoomGenerator(RoomGenerator generator)
+    {
+        roomGenerator = generator;
+        Debug.Log("RoomGenerator configurado correctamente.");
+    }
+
+    [PunRPC]
     public void SpawnEnemigos()
     {
+        if (roomGenerator == null)
+        {
+            Debug.LogError("RoomGenerator no está configurado. Aborta el spawn.");
+            return;
+        }
+
         currentRound++;
 
-        if (currentRound % roundsUntilBoss == 0) //Cada x rondas, aparece un jefe
+        if (currentRound % roundsUntilBoss == 0)
         {
             SpawnEnemy(bossEnemy);
         }
@@ -58,18 +80,17 @@ public class SpawnEnemies : MonoBehaviour
     private void SpawnEnemy(GameObject enemyPrefab)
     {
         Vector2 spawnPosition = GetValidSpawnPosition();
-        GameObject enemyObject = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
-        Enemy enemy = enemyObject.GetComponent<Enemy>();
-        enemy.GetComponent<EnemyMovement>().target = player;
-        activeEnemies.Add(enemy); 
+        GameObject enemyObject = PhotonNetwork.Instantiate(enemyPrefab.name, spawnPosition, Quaternion.identity);
+        enemyObject.GetComponent<EnemyMovement>().target = GameplayManager.instance.playersInGame[0]; // Default, actualizará después.
+        activeEnemies.Add(enemyObject.GetComponent<Enemy>());
     }
 
     private Vector2 GetValidSpawnPosition()
     {
         float halfWidth = roomGenerator.width / 2f;
-        float halfHeight = roomGenerator.height / 2f;
+        float halfHeight = (roomGenerator.height + 3) / 2f;
 
-        float x = Random.Range(-halfWidth + wallMargin, halfWidth - wallMargin);
+        float x = Random.Range(-halfWidth + wallMargin, halfWidth - wallMargin - 3);
         float y = Random.Range(0, halfHeight - wallMargin); // Solo en la mitad superior
 
         return new Vector2(x, y);
@@ -96,7 +117,7 @@ public class SpawnEnemies : MonoBehaviour
         yield return new WaitForSeconds(roundPauseDuration);
 
         // Spawnear la siguiente ronda
-        SpawnEnemigos();
+        GetComponent<PhotonView>().RPC("SpawnEnemigos", RpcTarget.All);
     }
 
     private void OnDrawGizmosSelected()
@@ -105,12 +126,12 @@ public class SpawnEnemies : MonoBehaviour
         if (roomGenerator != null)
         {
             float halfWidth = roomGenerator.width / 2f;
-            float halfHeight = roomGenerator.height / 2f;
+            float halfHeight = (roomGenerator.height + 3) / 2f;
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(
                 new Vector3(0, halfHeight / 2, 0),
-                new Vector3(roomGenerator.width - 2 * wallMargin, halfHeight - wallMargin, 0)
+                new Vector3(roomGenerator.width - 2 * wallMargin, halfHeight - wallMargin - 3, 0)
             );
 
             Gizmos.color = Color.red;

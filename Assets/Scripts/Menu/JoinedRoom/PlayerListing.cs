@@ -48,6 +48,7 @@ public class PlayerListing : MonoBehaviourPunCallbacks
         this.player = _player;
         _namePlayer.text = _player.NickName;
 
+        playerProperties["Nickname"] = _player.NickName;
       
     }
 

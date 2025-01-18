@@ -16,22 +16,20 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     public override void OnEnable()
     {
-        if (photonView.IsMine)
-        {
-            // Conectar las acciones del InputManager
-            InputManager.playerControls.Player.Move.performed += OnMoveInput;
-            InputManager.playerControls.Player.Move.canceled += OnMoveInput;
-        }
+ 
+        // Conectar las acciones del InputManager
+        InputManager.playerControls.Player.Move.performed += OnMoveInput;
+        InputManager.playerControls.Player.Move.canceled += OnMoveInput;
+        
     }
 
     public override void OnDisable()
     {
-        if (photonView.IsMine)
-        {
-            // Desconectar las acciones del InputManager
-            InputManager.playerControls.Player.Move.performed -= OnMoveInput;
-            InputManager.playerControls.Player.Move.canceled -= OnMoveInput;
-        }
+
+        // Desconectar las acciones del InputManager
+        InputManager.playerControls.Player.Move.performed -= OnMoveInput;
+        InputManager.playerControls.Player.Move.canceled -= OnMoveInput;
+        
            
     }
 
@@ -40,16 +38,21 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         // Leer el movimiento del input
         movementInput = context.ReadValue<Vector2>();
 
-        if (photonView.IsMine)
-        {
-            photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, null);
-        }
+       
+        photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, null);
+        
       
     }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        if (!photonView.IsMine)
+        {
+            Destroy(rb);
+        }
+
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -60,8 +63,8 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
-        if (photonView.IsMine)
-            Move();
+
+        Move();
     }
 
     [PunRPC]

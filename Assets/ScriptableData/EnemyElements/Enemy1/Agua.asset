@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54554d1926f9b424a8fe06c09dfc4c41, type: 3}
   m_Name: Agua
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: a903cbc0915ba0d4eb4c44f9dd80edfe, type: 3}
   elementType: 0
   debilidad: 2
   resistente: 3

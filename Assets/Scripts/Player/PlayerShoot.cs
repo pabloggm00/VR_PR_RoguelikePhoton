@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-public class PlayerShoot : MonoBehaviour
+public class PlayerShoot : MonoBehaviourPunCallbacks
 {
 
     [Header("Configuración del player")]
@@ -27,13 +28,13 @@ public class PlayerShoot : MonoBehaviour
     private Camera mainCamera;
 
 
-    private void OnEnable()
+    public override void OnEnable()
     {
         InputManager.playerControls.Player.Shoot.performed += OnShootInput;
         InputManager.playerControls.Player.Shoot.canceled += OnShootInputCancel;
     }
 
-    private void OnDisable()
+    public override void OnDisable()
     {
         InputManager.playerControls.Player.Shoot.performed -= OnShootInput;
         InputManager.playerControls.Player.Shoot.canceled -= OnShootInputCancel;
@@ -45,7 +46,13 @@ public class PlayerShoot : MonoBehaviour
         controller = GetComponent<PlayerController>();
         mainCamera = Camera.main;
 
-        poolParent = new GameObject("Pool Parent");
+        
+    }
+
+    [PunRPC]
+    public void SetPoolParent(string nickname)
+    {
+        poolParent = new GameObject("Pool Parent " + nickname);
     }
 
     private void Update()
@@ -53,6 +60,7 @@ public class PlayerShoot : MonoBehaviour
         if (shootDirection != Vector2.zero && canShoot)
         {
             Shoot();
+            //GetComponent<PhotonView>().RPC("Shoot", RpcTarget.All);
             canShoot = false;
         }
     }
@@ -80,7 +88,19 @@ public class PlayerShoot : MonoBehaviour
         playerMove.UpdateSpriteFlip(); //Recolocamos al personaje
     }
 
-    void Shoot()
+    [PunRPC]
+    public void Shoot()
+    {
+        GameObject bullet = PhotonNetwork.Instantiate(bulletPrefab.name, spawnBullet.position, Quaternion.identity);
+        bullet.transform.SetParent(poolParent.transform);
+
+        //Bullet bulletScript = bullet.GetComponent<Bullet>();
+        bullet.GetComponent<PhotonView>().RPC("Setup", RpcTarget.All, shootDirection.normalized, bulletSpeed, bulletDamage, controller.elementCurrent.elementType);
+        //bulletScript.Setup(shootDirection.normalized, bulletSpeed, bulletDamage, controller.elementCurrent.elementType);
+
+        StartCoroutine(CooldownShoot());
+    }
+    /*void Shoot()
     {
 
         // Comprobamos qué balas de la lista de balas en uso
@@ -109,7 +129,8 @@ public class PlayerShoot : MonoBehaviour
         else
         {
             // La instanciamos para nunca quedarnos sin balas.
-            chosenBullet = Instantiate(bulletPrefab, spawnBullet.position, Quaternion.identity, poolParent.transform);
+            chosenBullet = PhotonNetwork.Instantiate(bulletPrefab.name, spawnBullet.position, Quaternion.identity);
+            chosenBullet.transform.SetParent(poolParent.transform);
             activeBullets.Add(chosenBullet);
         }
 
@@ -121,7 +142,7 @@ public class PlayerShoot : MonoBehaviour
         bulletScript.Setup(shootDirection.normalized, bulletSpeed, bulletDamage, controller.elementCurrent.elementType);
 
         StartCoroutine(CooldownShoot());
-    }
+    }*/
 
     IEnumerator CooldownShoot()
     {

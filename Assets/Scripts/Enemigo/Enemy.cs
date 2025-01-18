@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -30,6 +31,8 @@ public class Enemy : MonoBehaviour
         enemySpritesSettings.AgregarSprites(elements);
 
         elementCurrent = GetRandomElement();
+        
+        spriteRenderer.sprite = elementCurrent.sprite;
     }
 
     ElementSprite GetRandomElement()
@@ -39,6 +42,7 @@ public class Enemy : MonoBehaviour
         return elements[rnd];
     }
 
+    [PunRPC]
     public void TakeDamage(int dmg, ElementType bulletElement)
     {
         float elementDamage = dmg * elementCurrent.GetMultiplierDamage(bulletElement);
@@ -50,11 +54,12 @@ public class Enemy : MonoBehaviour
         if (currentHP <= 0)
         {
             currentHP = 0; // Muere
-            Die();
+            GetComponent<PhotonView>().RPC("Die", RpcTarget.All);
         }
     }
 
-    private void Die()
+    [PunRPC]
+    public void Die()
     {
         OnEnemyDeath?.Invoke(this); // Notificar al spawner
         Destroy(gameObject); // Eliminar al enemigo
@@ -65,7 +70,7 @@ public class Enemy : MonoBehaviour
 
         if (collision.TryGetComponent<PlayerHealth>(out PlayerHealth player))
         {
-            player.TakeDamage(damage, elementCurrent.elementType);
+            player.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.All, damage, elementCurrent.elementType);
         }
 
        

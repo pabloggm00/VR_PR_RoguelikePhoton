@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Photon.Pun;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviourPunCallbacks
 {
 
     [Header("Configuración de Vida")]
@@ -27,8 +28,10 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    [PunRPC]
     public void TakeDamage(int damage, ElementType enemyElement)
     {
+        if (!photonView.IsMine) return;
         if (isInvulnerable) return;
 
         float elementDamage = damage * controller.elementCurrent.GetMultiplierDamage(enemyElement);
