@@ -49,7 +49,7 @@ public class RoomGenerator : MonoBehaviour
     {
         spawner = PhotonNetwork.Instantiate(spawnerPrefab.name, Vector3.zero, Quaternion.identity);
         var spawnEnemies = spawner.GetComponent<SpawnEnemies>();
-        spawnEnemies.SetRoomGenerator(GameplayManager.instance.roomGenerator);
+        //spawnEnemies.SetRoomGenerator(GameplayManager.instance.roomGenerator);
 
         yield return new WaitForSeconds(2);
         spawner.GetComponent<PhotonView>().RPC("SpawnEnemigos", RpcTarget.All);

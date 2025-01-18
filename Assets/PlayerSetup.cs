@@ -15,6 +15,14 @@ public class PlayerSetup : MonoBehaviour
     public string playerName;
     public TMP_Text nicknameText;
 
+    private void Start()
+    {
+        if (PhotonNetwork.IsConnected && PhotonNetwork.LocalPlayer.IsLocal)
+        {
+            IsLocalPlayer();
+        }
+    }
+
     public void IsLocalPlayer()
     {
         controller.enabled = true;

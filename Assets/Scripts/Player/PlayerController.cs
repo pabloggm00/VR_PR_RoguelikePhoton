@@ -20,7 +20,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        
+        if (photonView.IsMine)
+        {
+            int selectedSpriteIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties["CharacterIndex"];
+            photonView.RPC("Init", RpcTarget.AllBuffered, selectedSpriteIndex);
+        }
     }
 
     [PunRPC]
