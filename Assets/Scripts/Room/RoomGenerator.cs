@@ -17,29 +17,27 @@ public class RoomGenerator : MonoBehaviour
 
     [Header("Spawner")]
     public GameObject spawnerPrefab;
-    public Transform spawnPlayer;
 
     private GameObject spawner;
 
-    GameObject SpawnPlayer(PhotonView playerPrefab)
-    {
-        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
-        player.GetComponent<PlayerSetup>().IsLocalPlayer();
-        player.GetComponent<PhotonView>().RPC("Init", RpcTarget.All, (int)PhotonNetwork.LocalPlayer.CustomProperties["playerSprite"]);
-        player.GetComponent<PhotonView>().RPC("SetNickname", RpcTarget.All, (string)PhotonNetwork.LocalPlayer.CustomProperties["Nickname"]);
-        player.GetComponent<PhotonView>().RPC("SetPoolParent", RpcTarget.All, (string)PhotonNetwork.LocalPlayer.CustomProperties["Nickname"]);
 
-        return player;
+    private void Start()
+    {
+        InitGame();
     }
 
-    public void InitGame(PhotonView player)
+    public void InitGame()
     {
-        GameplayManager.instance.AgregarJugador(SpawnPlayer(player));
-
         //spawner.SpawnEnemigos();
         GenerateRoom();
 
-        StartCoroutine(SpawnCount());
+        if (PhotonNetwork.IsMasterClient)
+        {
+
+              StartCoroutine(SpawnCount());
+
+        }
+
         //tenemos que cvonvertir el spawner en un photonview para que se sincronice entre jugadores, y así que spawneen los mismos enemigos para todos
         //luego tenemos que instanciar con photon ese objeto,y luego le pasaremos los dos players in game a los que pueda seguir continuamente segun la cercanía
 
@@ -48,8 +46,8 @@ public class RoomGenerator : MonoBehaviour
     IEnumerator SpawnCount()
     {
         spawner = PhotonNetwork.Instantiate(spawnerPrefab.name, Vector3.zero, Quaternion.identity);
-        var spawnEnemies = spawner.GetComponent<SpawnEnemies>();
-        //spawnEnemies.SetRoomGenerator(GameplayManager.instance.roomGenerator);
+        SpawnEnemies spawnEnemies = spawner.GetComponent<SpawnEnemies>();
+        spawnEnemies.SetRoomGenerator(this);
 
         yield return new WaitForSeconds(2);
         spawner.GetComponent<PhotonView>().RPC("SpawnEnemigos", RpcTarget.All);

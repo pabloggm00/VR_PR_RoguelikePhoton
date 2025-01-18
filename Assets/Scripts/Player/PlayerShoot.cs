@@ -85,7 +85,7 @@ public class PlayerShoot : MonoBehaviourPunCallbacks
     {
         shootDirection = context.ReadValue<Vector2>();
 
-        playerMove.UpdateSpriteFlip(); //Recolocamos al personaje
+        //playerMove.UpdateSpriteFlip(); //Recolocamos al personaje
     }
 
     [PunRPC]

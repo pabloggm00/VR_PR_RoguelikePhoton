@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviourPunCallbacks
 {
     public float hP;
     public int damage;
@@ -16,10 +17,15 @@ public class Enemy : MonoBehaviour
     private DamageEffect damageEffect;
 
     // Evento para notificar al spawner
-    public delegate void EnemyDeathHandler(Enemy enemy);
-    public static event EnemyDeathHandler OnEnemyDeath;
+    public static event Action<GameObject> OnEnemyDeath;
 
     private void Start()
+    {
+        
+        Init();
+    }
+
+    public void Init()
     {
         currentHP = hP;
 
@@ -27,20 +33,27 @@ public class Enemy : MonoBehaviour
         damageEffect.Init(spriteRenderer);
 
         elements = new List<ElementSprite>();
-
         enemySpritesSettings.AgregarSprites(elements);
 
-        elementCurrent = GetRandomElement();
-        
-        spriteRenderer.sprite = elementCurrent.sprite;
+
+        int index = UnityEngine.Random.Range(0, elements.Count);
+        photonView.RPC("SyncElementSprite", RpcTarget.AllBuffered, index);
     }
 
-    ElementSprite GetRandomElement()
+    [PunRPC]
+    public void SyncElementSprite(int index)
     {
-        int rnd = Random.Range(0, elements.Count);
-
-        return elements[rnd];
+        if (index >= 0 && index < elements.Count)
+        {
+            elementCurrent = elements[index];
+            spriteRenderer.sprite = elementCurrent.sprite;
+        }
+        else
+        {
+            Debug.LogError("Índice de sprite inválido recibido.");
+        }
     }
+
 
     [PunRPC]
     public void TakeDamage(int dmg, ElementType bulletElement)
@@ -61,7 +74,7 @@ public class Enemy : MonoBehaviour
     [PunRPC]
     public void Die()
     {
-        OnEnemyDeath?.Invoke(this); // Notificar al spawner
+        OnEnemyDeath?.Invoke(this.gameObject); // Notificar al spawner
         Destroy(gameObject); // Eliminar al enemigo
     }
 

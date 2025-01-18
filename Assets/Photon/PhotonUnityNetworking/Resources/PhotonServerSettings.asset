@@ -55,6 +55,10 @@ MonoBehaviour:
   - PlayerReady
   - SetCharacter
   - SyncCharacterSelection
+  - UpdatePosition
+  - SpawnEnemy
+  - UpdateEnemyFlip
+  - SyncElementSprite
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1

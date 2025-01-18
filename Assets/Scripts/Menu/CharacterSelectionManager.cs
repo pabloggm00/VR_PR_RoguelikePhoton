@@ -62,9 +62,22 @@ public class CharacterSelectionManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        Debug.Log($"Jugador {newPlayer.NickName} se unió a la sala.");
+        UpdatePlayerList(); // Actualiza la lista de jugadores al entrar un nuevo jugador
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        Debug.Log($"Jugador {otherPlayer.NickName} salió de la sala.");
+        UpdatePlayerList(); // Actualiza la lista de jugadores al salir un jugador
+    }
+
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        // Actualizar la lista si cambian las propiedades de algún jugador
-        UpdatePlayerList();
+        Debug.Log($"Propiedades de {targetPlayer.NickName} actualizadas.");
+        UpdatePlayerList(); // Asegúrate de que la lista de jugadores refleje los cambios
     }
+
 }

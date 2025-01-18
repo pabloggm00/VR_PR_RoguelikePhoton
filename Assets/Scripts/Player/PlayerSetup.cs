@@ -17,10 +17,6 @@ public class PlayerSetup : MonoBehaviour
 
     private void Start()
     {
-        if (PhotonNetwork.IsConnected && PhotonNetwork.LocalPlayer.IsLocal)
-        {
-            IsLocalPlayer();
-        }
     }
 
     public void IsLocalPlayer()
@@ -30,6 +26,7 @@ public class PlayerSetup : MonoBehaviour
         playerHealth.enabled = true;
         playerMove.enabled = true;
 
+        Debug.Log("CREADO PLAYER");
 
         Rigidbody2D rb = this.AddComponent<Rigidbody2D>();
         rb.freezeRotation = true;

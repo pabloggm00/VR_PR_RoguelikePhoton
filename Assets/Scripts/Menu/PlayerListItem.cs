@@ -13,7 +13,8 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     public Button nextButton;
     public Button previousButton;
 
-    private Photon.Realtime.Player player; // Referencia al jugador
+    [HideInInspector]
+    public Photon.Realtime.Player player; // Referencia al jugador
     private PlayerSprites playerSprites; // Referencia al ScriptableObject con los sprites
     private int selectedCharacterIndex = 0;
 
@@ -39,10 +40,14 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
             previousButton.gameObject.SetActive(false);
         }
 
-        // Actualizar la selección actual desde las propiedades del jugador
-        if (player.CustomProperties.ContainsKey("CharacterIndex"))
+        // Recuperar el índice de carácter desde las propiedades personalizadas
+        if (player.CustomProperties.TryGetValue("CharacterIndex", out object characterIndex))
         {
-            selectedCharacterIndex = (int)player.CustomProperties["CharacterIndex"];
+            selectedCharacterIndex = (int)characterIndex;
+        }
+        else
+        {
+            selectedCharacterIndex = 0; // Valor predeterminado
         }
 
         UpdateCharacterSprite();
@@ -83,12 +88,35 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     {
         if (player.IsLocal)
         {
+            // Establece la propiedad personalizada "CharacterIndex"
             ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable
-            {
-                { "CharacterIndex", selectedCharacterIndex }
-            };
+        {
+            { "CharacterIndex", selectedCharacterIndex }
+        };
 
             player.SetCustomProperties(properties);
+
+            // Verifica si la clave existe antes de intentar acceder a ella
+            if (player.CustomProperties.TryGetValue("CharacterIndex", out object characterIndex))
+            {
+                Debug.Log((int)characterIndex); // Loguea el índice
+            }
+            else
+            {
+                Debug.LogWarning("CharacterIndex no está definido en las propiedades personalizadas del jugador.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Maneja la actualización de propiedades personalizadas.
+    /// </summary>
+    public void OnPlayerPropertiesUpdated(ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (changedProps.ContainsKey("CharacterIndex"))
+        {
+            selectedCharacterIndex = (int)changedProps["CharacterIndex"];
+            UpdateCharacterSprite();
         }
     }
 }

@@ -40,6 +40,8 @@ public class GameplayManager : MonoBehaviour
             playerSetup.IsLocalPlayer();
             playerObject.GetComponent<PhotonView>().RPC("SetNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
         }
+
+        AgregarJugador(playerObject);
     }
 
     void InitWorld()

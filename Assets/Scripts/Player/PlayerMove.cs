@@ -38,10 +38,13 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         // Leer el movimiento del input
         movementInput = context.ReadValue<Vector2>();
 
-       
-        photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, null);
-        
-      
+
+        if (movementInput != Vector2.zero) // Solo actualizar cuando haya movimiento
+        {
+            photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, movementInput.x > 0); // Se pasa el flip (true o false)
+        }
+
+
     }
 
     void Start()
@@ -68,16 +71,9 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void UpdateSpriteFlip()
+    public void UpdateSpriteFlip(bool flipRight)
     {
-        // Flipeamos horizontalmente si disparamos hacia la izquierda o derecha
-        if (movementInput == Vector2.right)
-            spriteRenderer.flipX = false;
-        else if (movementInput == Vector2.left)
-            spriteRenderer.flipX = true;
-
-
-        //tambien hay que hacerlo con el vertical
+        spriteRenderer.flipX = !flipRight; // Flip al cambiar la dirección
     }
 
     void Move()

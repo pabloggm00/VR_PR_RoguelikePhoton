@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovement : MonoBehaviourPunCallbacks
 {
     [Header("Movimiento")]
     public float moveSpeed = 2f;
 
     [HideInInspector]
-    public GameObject target; 
+    public GameObject target;
 
     private SpriteRenderer spriteRenderer;
     private Vector3 networkPosition; // Para interpolar la posición en clientes
 
     private void Start()
     {
-
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (PhotonNetwork.IsMasterClient)
@@ -27,30 +26,45 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        UpdateTarget();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            UpdateTarget(); // Solo el servidor actualiza el objetivo
+        }
     }
 
     private void FixedUpdate()
     {
-        if (target != null)
+        if (PhotonNetwork.IsMasterClient)
         {
-            MoveTowardsPlayer();
+            // Solo el MasterClient mueve al enemigo
+            if (target != null)
+            {
+                MoveTowardsPlayer();
+                GetComponent<PhotonView>().RPC("UpdatePosition", RpcTarget.Others, transform.position);
+            }
         }
-        else if (!PhotonNetwork.IsMasterClient)
+        else
         {
-            // Interpolación para suavizar el movimiento
-            transform.position = Vector3.MoveTowards(transform.position, networkPosition, moveSpeed * Time.fixedDeltaTime);
+            // Clientes interpolan hacia la posición enviada
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * moveSpeed);
         }
+    }
+
+    // RPC para actualizar posición en clientes
+    [PunRPC]
+    private void UpdatePosition(Vector3 position)
+    {
+        networkPosition = position;
     }
 
     private void UpdateTarget()
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        // Buscar al jugador más cercano
         float closestDistance = float.MaxValue;
         GameObject closestPlayer = null;
 
+        // Encuentra el jugador más cercano
         foreach (GameObject player in GameplayManager.instance.playersInGame)
         {
             if (player != null)
@@ -64,30 +78,50 @@ public class EnemyMovement : MonoBehaviour
             }
         }
 
-        target = closestPlayer;
-        GetComponent<PhotonView>().RPC("SetTarget", RpcTarget.Others, target.GetPhotonView().ViewID);
+        // Actualiza el target si cambió
+        if (closestPlayer != target)
+        {
+            target = closestPlayer;
+            int targetViewID = target != null ? target.GetComponent<PhotonView>().ViewID : -1;
+            GetComponent<PhotonView>().RPC("SetTarget", RpcTarget.All, targetViewID);
+        }
     }
 
     [PunRPC]
     private void SetTarget(int targetViewID)
     {
-        target = PhotonView.Find(targetViewID)?.gameObject;
+        // Recupera el GameObject a partir del ViewID
+        if (targetViewID != -1)
+        {
+            target = PhotonView.Find(targetViewID)?.gameObject;
+        }
+        else
+        {
+            target = null;
+        }
     }
-
 
     private void MoveTowardsPlayer()
     {
-        Vector2 direction = (target.transform.position - transform.position).normalized;
+        if (target == null) return;
 
+        Vector2 direction = (target.transform.position - transform.position).normalized;
         transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
 
+        // Ajusta la orientación del sprite según la dirección
         if (direction.x < 0)
         {
-            spriteRenderer.flipX = true;
+            photonView.RPC("UpdateEnemyFlip", RpcTarget.AllBuffered, false); // Flipa el sprite a la izquierda
         }
         else if (direction.x > 0)
         {
-            spriteRenderer.flipX = false; 
+            photonView.RPC("UpdateEnemyFlip", RpcTarget.AllBuffered, true); // Flipa el sprite a la derecha
         }
+    }
+
+    [PunRPC]
+    public void UpdateEnemyFlip(bool flipRight)
+    {
+        spriteRenderer.flipX = !flipRight; // Flipa al enemigo también
     }
 }

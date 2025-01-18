@@ -24,7 +24,7 @@ public class SpawnEnemies : MonoBehaviour
 
     [HideInInspector]
     public GameObject player;
-    private List<Enemy> activeEnemies = new List<Enemy>(); // Lista de enemigos vivos
+    private List<GameObject> activeEnemies = new List<GameObject>(); // Lista de enemigos vivos
 
     private void OnEnable()
     {
@@ -54,6 +54,9 @@ public class SpawnEnemies : MonoBehaviour
     [PunRPC]
     public void SpawnEnemigos()
     {
+
+        if (!PhotonNetwork.IsMasterClient) return;
+
         if (roomGenerator == null)
         {
             Debug.LogError("RoomGenerator no está configurado. Aborta el spawn.");
@@ -62,27 +65,26 @@ public class SpawnEnemies : MonoBehaviour
 
         currentRound++;
 
-        if (currentRound % roundsUntilBoss == 0)
+        int enemyCount = (currentRound % roundsUntilBoss == 0) ? 1 : Random.Range(minEnemies, maxEnemies + 1);
+        Debug.Log(enemyCount);
+        for (int i = 0; i < enemyCount; i++)
         {
-            SpawnEnemy(bossEnemy);
-        }
-        else
-        {
-            int enemyCount = Random.Range(minEnemies, maxEnemies + 1);
-            for (int i = 0; i < enemyCount; i++)
-            {
-                GameObject enemyToSpawn = regularEnemies[Random.Range(0, regularEnemies.Count)];
-                SpawnEnemy(enemyToSpawn);
-            }
-        }
-    }
+            // Determina el prefab del enemigo: jefe o enemigo regular.
+            GameObject enemyPrefab = (currentRound % roundsUntilBoss == 0) ? bossEnemy : regularEnemies[Random.Range(0, regularEnemies.Count)];
 
-    private void SpawnEnemy(GameObject enemyPrefab)
-    {
-        Vector2 spawnPosition = GetValidSpawnPosition();
-        GameObject enemyObject = PhotonNetwork.Instantiate(enemyPrefab.name, spawnPosition, Quaternion.identity);
-        enemyObject.GetComponent<EnemyMovement>().target = GameplayManager.instance.playersInGame[0]; // Default, actualizará después.
-        activeEnemies.Add(enemyObject.GetComponent<Enemy>());
+            // Genera una posición válida para el spawn.
+            Vector2 spawnPosition = GetValidSpawnPosition();
+
+            // Instancia y configura el enemigo.
+            GameObject enemyObject = PhotonNetwork.Instantiate(enemyPrefab.name, spawnPosition, Quaternion.identity);
+
+            // Asigna el primer jugador como target inicial (se actualiza más tarde).
+            enemyObject.GetComponent<EnemyMovement>().target = GameplayManager.instance.playersInGame[0];
+            //enemyObject.GetComponent<Enemy>().Init();
+
+            // Añade el enemigo a la lista activa.
+            activeEnemies.Add(enemyObject);
+        }
     }
 
     private Vector2 GetValidSpawnPosition()
@@ -96,9 +98,10 @@ public class SpawnEnemies : MonoBehaviour
         return new Vector2(x, y);
     }
 
-    private void HandleEnemyDeath(Enemy enemy)
+    private void HandleEnemyDeath(GameObject enemy)
     {
         activeEnemies.Remove(enemy);
+        GetComponent<PhotonView>().RPC("HandleEnemyDeath", RpcTarget.All, gameObject);
 
         // Si no quedan enemigos, spawnear la siguiente ronda
         if (activeEnemies.Count == 0)
@@ -118,6 +121,7 @@ public class SpawnEnemies : MonoBehaviour
 
         // Spawnear la siguiente ronda
         GetComponent<PhotonView>().RPC("SpawnEnemigos", RpcTarget.All);
+
     }
 
     private void OnDrawGizmosSelected()

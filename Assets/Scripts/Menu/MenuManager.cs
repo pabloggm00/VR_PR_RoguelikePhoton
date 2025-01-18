@@ -16,6 +16,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings(); // Conectar al servidor Photon
     }
 
@@ -57,6 +58,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public void JoinRoom(string roomName)
     {
+        SetPlayerName();
         PhotonNetwork.JoinRoom(roomName);
     }
 
@@ -81,6 +83,17 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Unido a la sala: " + PhotonNetwork.CurrentRoom.Name);
+
+        // Asignar un valor inicial para CharacterIndex si no existe
+        if (!PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("CharacterIndex"))
+        {
+            ExitGames.Client.Photon.Hashtable initialProperties = new ExitGames.Client.Photon.Hashtable
+        {
+            { "CharacterIndex", 0 } // Valor inicial por defecto
+        };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(initialProperties);
+        }
+
         PhotonNetwork.LoadLevel("CharacterSelection"); // Cargar la escena de selección de personaje
     }
 }

@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             int selectedSpriteIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties["CharacterIndex"];
-            photonView.RPC("Init", RpcTarget.AllBuffered, selectedSpriteIndex);
+            photonView.RPC("Init", RpcTarget.All, selectedSpriteIndex);
         }
     }
 
