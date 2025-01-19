@@ -60,6 +60,8 @@ MonoBehaviour:
   - UpdateEnemyFlip
   - SyncElementSprite
   - DeactivateBullet
+  - ShowDamage
+  - ChangeElementRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

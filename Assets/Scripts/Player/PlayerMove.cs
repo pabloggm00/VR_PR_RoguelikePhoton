@@ -17,7 +17,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     public override void OnEnable()
     {
  
-        // Conectar las acciones del InputManager
         InputManager.playerControls.Player.Move.performed += OnMoveInput;
         InputManager.playerControls.Player.Move.canceled += OnMoveInput;
         
@@ -26,7 +25,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks
     public override void OnDisable()
     {
 
-        // Desconectar las acciones del InputManager
+       
         InputManager.playerControls.Player.Move.performed -= OnMoveInput;
         InputManager.playerControls.Player.Move.canceled -= OnMoveInput;
         
@@ -35,14 +34,13 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     private void OnMoveInput(InputAction.CallbackContext context)
     {
-        // Leer el movimiento del input
+      
         movementInput = context.ReadValue<Vector2>();
 
-        if (movementInput.x != 0) // Solo actualizar cuando haya movimiento horizontal
+        if (movementInput.x != 0) 
         {
-            // Determinar el flip basado en el input horizontal
             bool flipRight = movementInput.x > 0;
-            photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, flipRight);
+            UpdateSpriteFlip(flipRight);
         }
     }
 
@@ -73,10 +71,10 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         Move();
     }
 
-    [PunRPC]
+ 
     public void UpdateSpriteFlip(bool flipRight)
     {
-        spriteRenderer.flipX = !flipRight; // Flip al cambiar la dirección
+        spriteRenderer.flipX = !flipRight;
     }
 
     void Move()

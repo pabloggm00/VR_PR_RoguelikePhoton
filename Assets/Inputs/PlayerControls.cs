@@ -44,6 +44,42 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ChangeElement1"",
+                    ""type"": ""Button"",
+                    ""id"": ""81681b5d-c1d5-4b36-94a5-0c2395bf5954"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeElement2"",
+                    ""type"": ""Button"",
+                    ""id"": ""93567951-2101-4c66-8d02-a2978537c57a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeElement3"",
+                    ""type"": ""Button"",
+                    ""id"": ""4680bc53-3de0-4f58-ad8b-4d4090b5ab9f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeElement4"",
+                    ""type"": ""Button"",
+                    ""id"": ""b1a5921c-29d4-497c-93bb-f4c82d48e0a9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -156,6 +192,50 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2e6aa94-6d19-46ca-81c6-236ec5bafc64"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeElement1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe409d45-5f25-4ebf-9a3b-55c49b99248f"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeElement2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c267a555-9900-4f01-b2ac-a609cc285a20"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeElement3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""26ef6b04-e41c-4863-bdda-b5a306e38453"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeElement4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -194,6 +274,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
+        m_Player_ChangeElement1 = m_Player.FindAction("ChangeElement1", throwIfNotFound: true);
+        m_Player_ChangeElement2 = m_Player.FindAction("ChangeElement2", throwIfNotFound: true);
+        m_Player_ChangeElement3 = m_Player.FindAction("ChangeElement3", throwIfNotFound: true);
+        m_Player_ChangeElement4 = m_Player.FindAction("ChangeElement4", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Reiniciar = m_UI.FindAction("Reiniciar", throwIfNotFound: true);
@@ -260,12 +344,20 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Shoot;
+    private readonly InputAction m_Player_ChangeElement1;
+    private readonly InputAction m_Player_ChangeElement2;
+    private readonly InputAction m_Player_ChangeElement3;
+    private readonly InputAction m_Player_ChangeElement4;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
+        public InputAction @ChangeElement1 => m_Wrapper.m_Player_ChangeElement1;
+        public InputAction @ChangeElement2 => m_Wrapper.m_Player_ChangeElement2;
+        public InputAction @ChangeElement3 => m_Wrapper.m_Player_ChangeElement3;
+        public InputAction @ChangeElement4 => m_Wrapper.m_Player_ChangeElement4;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -281,6 +373,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
+            @ChangeElement1.started += instance.OnChangeElement1;
+            @ChangeElement1.performed += instance.OnChangeElement1;
+            @ChangeElement1.canceled += instance.OnChangeElement1;
+            @ChangeElement2.started += instance.OnChangeElement2;
+            @ChangeElement2.performed += instance.OnChangeElement2;
+            @ChangeElement2.canceled += instance.OnChangeElement2;
+            @ChangeElement3.started += instance.OnChangeElement3;
+            @ChangeElement3.performed += instance.OnChangeElement3;
+            @ChangeElement3.canceled += instance.OnChangeElement3;
+            @ChangeElement4.started += instance.OnChangeElement4;
+            @ChangeElement4.performed += instance.OnChangeElement4;
+            @ChangeElement4.canceled += instance.OnChangeElement4;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -291,6 +395,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
+            @ChangeElement1.started -= instance.OnChangeElement1;
+            @ChangeElement1.performed -= instance.OnChangeElement1;
+            @ChangeElement1.canceled -= instance.OnChangeElement1;
+            @ChangeElement2.started -= instance.OnChangeElement2;
+            @ChangeElement2.performed -= instance.OnChangeElement2;
+            @ChangeElement2.canceled -= instance.OnChangeElement2;
+            @ChangeElement3.started -= instance.OnChangeElement3;
+            @ChangeElement3.performed -= instance.OnChangeElement3;
+            @ChangeElement3.canceled -= instance.OnChangeElement3;
+            @ChangeElement4.started -= instance.OnChangeElement4;
+            @ChangeElement4.performed -= instance.OnChangeElement4;
+            @ChangeElement4.canceled -= instance.OnChangeElement4;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -358,6 +474,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnChangeElement1(InputAction.CallbackContext context);
+        void OnChangeElement2(InputAction.CallbackContext context);
+        void OnChangeElement3(InputAction.CallbackContext context);
+        void OnChangeElement4(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

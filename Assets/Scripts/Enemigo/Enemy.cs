@@ -37,9 +37,12 @@ public class Enemy : MonoBehaviourPunCallbacks
     [PunRPC]
     public void TakeDamage(int dmg, ElementType bulletElement)
     {
-     
 
-        float elementDamage = dmg * elementCurrent.GetMultiplierDamage(bulletElement);
+        float multiplier = elementCurrent.GetMultiplierDamage(bulletElement);
+        float elementDamage = dmg * multiplier;
+
+        // Mostrar el daño recibido
+        photonView.RPC("ShowDamage", RpcTarget.All, elementDamage, multiplier);
 
         currentHP -= elementDamage;
 

@@ -18,6 +18,34 @@ public class PlayerController : MonoBehaviourPunCallbacks
     int maxSouls;
     public static event Action<ElementType, int> UpdateSoulHUD;
 
+
+    public override void OnEnable()
+    {
+        // Suscribirse a las acciones del grupo ChangeElement
+        InputManager.playerControls.Player.ChangeElement1.performed += ctx => OnChangeElement(0);
+        InputManager.playerControls.Player.ChangeElement2.performed += ctx => OnChangeElement(1);
+        InputManager.playerControls.Player.ChangeElement3.performed += ctx => OnChangeElement(2);
+        InputManager.playerControls.Player.ChangeElement4.performed += ctx => OnChangeElement(3);
+    }
+
+    public override void OnDisable()
+    {
+        InputManager.playerControls.Player.ChangeElement1.performed -= ctx => OnChangeElement(0);
+        InputManager.playerControls.Player.ChangeElement2.performed -= ctx => OnChangeElement(1);
+        InputManager.playerControls.Player.ChangeElement3.performed -= ctx => OnChangeElement(2);
+        InputManager.playerControls.Player.ChangeElement4.performed -= ctx => OnChangeElement(3);
+    }
+
+    private void OnChangeElement(int elementIndex)
+    {
+        if (!photonView.IsMine) return;
+
+        if (elementIndex >= 0 && elementIndex < elementSpritePlayer.Count)
+        {
+            photonView.RPC("ChangeElementRPC", RpcTarget.All, elementIndex);
+        }
+    }
+
     private void Start()
     {
         if (photonView.IsMine)
@@ -25,6 +53,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
             int selectedSpriteIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties["CharacterIndex"];
             photonView.RPC("Init", RpcTarget.All, selectedSpriteIndex);
         }
+    }
+
+    [PunRPC]
+    public void ChangeElementRPC(int elementIndex)
+    {
+        elementCurrent = elementSpritePlayer[elementIndex];
+        spriteRenderer.sprite = elementCurrent.sprite;
     }
 
     [PunRPC]
