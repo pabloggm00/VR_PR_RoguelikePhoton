@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54554d1926f9b424a8fe06c09dfc4c41, type: 3}
-  m_Name: Agua
+  m_Name: CatHoja
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
-  elementType: 0
-  debilidad: 2
-  resistente: 3
+  elementType: 2
+  debilidad: 1
+  resistente: 0

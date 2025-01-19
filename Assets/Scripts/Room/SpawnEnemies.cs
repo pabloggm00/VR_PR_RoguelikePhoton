@@ -80,7 +80,6 @@ public class SpawnEnemies : MonoBehaviour
 
             // Asigna el primer jugador como target inicial (se actualiza más tarde).
             enemyObject.GetComponent<EnemyMovement>().target = GameplayManager.instance.playersInGame[0];
-            //enemyObject.GetComponent<Enemy>().Init();
 
             // Añade el enemigo a la lista activa.
             activeEnemies.Add(enemyObject);
@@ -98,10 +97,21 @@ public class SpawnEnemies : MonoBehaviour
         return new Vector2(x, y);
     }
 
-    private void HandleEnemyDeath(GameObject enemy)
+    private void HandleEnemyDeath(int viewID)
     {
-        activeEnemies.Remove(enemy);
-        GetComponent<PhotonView>().RPC("HandleEnemyDeath", RpcTarget.All, gameObject);
+
+        PhotonView enemyView = PhotonView.Find(viewID);
+        if (enemyView != null)
+        {
+            GameObject enemyObject = enemyView.gameObject;
+
+            // Eliminar el enemigo solo si eres el MasterClient
+            if (PhotonNetwork.IsMasterClient)
+            {
+                activeEnemies.Remove(enemyObject);
+                PhotonNetwork.Destroy(enemyView.gameObject);
+            }
+        }
 
         // Si no quedan enemigos, spawnear la siguiente ronda
         if (activeEnemies.Count == 0)
@@ -119,8 +129,12 @@ public class SpawnEnemies : MonoBehaviour
         // Esperar la duración de la pausa
         yield return new WaitForSeconds(roundPauseDuration);
 
-        // Spawnear la siguiente ronda
-        GetComponent<PhotonView>().RPC("SpawnEnemigos", RpcTarget.All);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // Spawnear la siguiente ronda
+            GetComponent<PhotonView>().RPC("SpawnEnemigos", RpcTarget.All);
+        }
+ 
 
     }
 

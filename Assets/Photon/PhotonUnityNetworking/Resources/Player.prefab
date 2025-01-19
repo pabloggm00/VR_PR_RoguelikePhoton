@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: -8173608288237632845}
   - component: {fileID: 985319786636924373}
   - component: {fileID: 7719233150306250859}
+  - component: {fileID: 7548256340510464540}
   - component: {fileID: 1428801546976960241}
   - component: {fileID: 9187256625425670775}
   - component: {fileID: 2683048307887203669}
@@ -336,12 +337,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12d9252da8424f84786213fecf35abc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 7427133847649038961}
   bulletSpeed: 10
   bulletDamage: 1
   shootCooldown: 0.5
   bulletPrefab: {fileID: 3900483824530595001, guid: bbf1fc3e34243264b9025db5a23d3846, type: 3}
   spawnBullet: {fileID: 2424815961601057470}
+--- !u!114 &7548256340510464540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6992864544089632955}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcab5168da23e240927dacfd88b57a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blinkDuration: 0.4
+  blinkCount: 2
+  blinkInterval: 0.2
+  blinkColor: {r: 0.6509434, g: 0.033775367, b: 0.033775367, a: 1}
 --- !u!114 &1428801546976960241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,10 +373,6 @@ MonoBehaviour:
   maxHealth: 10
   currentHealth: 0
   spriteRenderer: {fileID: 7427133847649038961}
-  damageColor: {r: 1, g: 0, b: 0, a: 1}
-  damageBlinkDuration: 0.1
-  damageBlinkDurationAndInvulnerableOffset: 0.3
-  damageBlinkCount: 3
 --- !u!70 &9187256625425670775
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -468,5 +480,6 @@ MonoBehaviour:
   playerShoot: {fileID: 7719233150306250859}
   playerHealth: {fileID: 1428801546976960241}
   playerMove: {fileID: 985319786636924373}
+  damageEffect: {fileID: 7548256340510464540}
   playerName: 
   nicknameText: {fileID: 5236591711686346398}

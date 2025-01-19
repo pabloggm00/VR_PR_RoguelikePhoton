@@ -11,6 +11,7 @@ public class PlayerSetup : MonoBehaviour
     public PlayerShoot playerShoot;
     public PlayerHealth playerHealth;
     public PlayerMove playerMove;
+    public DamageEffect damageEffect;
 
     public string playerName;
     public TMP_Text nicknameText;
@@ -25,8 +26,7 @@ public class PlayerSetup : MonoBehaviour
         playerShoot.enabled = true;
         playerHealth.enabled = true;
         playerMove.enabled = true;
-
-        Debug.Log("CREADO PLAYER");
+        damageEffect.enabled = true;
 
         Rigidbody2D rb = this.AddComponent<Rigidbody2D>();
         rb.freezeRotation = true;

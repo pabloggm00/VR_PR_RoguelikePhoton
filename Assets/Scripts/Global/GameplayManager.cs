@@ -9,7 +9,8 @@ public class GameplayManager : MonoBehaviour
 
     //public RoomGenerator roomGenerator;
     public GameObject playerPrefab;
-    public Transform spawnPoint;
+    public Transform spawnPointPlayer1;
+    public Transform spawnPointPlayer2;
     //public GameObject poolParent;
     public int soulsNeeded = 5;
 
@@ -31,6 +32,7 @@ public class GameplayManager : MonoBehaviour
 
     private void SpawnPlayer()
     {
+        Transform spawnPoint = GetSpawnPoint(PhotonNetwork.LocalPlayer);
         GameObject playerObject = PhotonNetwork.Instantiate(playerPrefab.name, spawnPoint.position, Quaternion.identity);
 
         // Configurar el jugador local
@@ -53,6 +55,16 @@ public class GameplayManager : MonoBehaviour
     public void AgregarJugador(GameObject player)
     {
         playersInGame.Add(player);
+    }
+
+    private Transform GetSpawnPoint(Photon.Realtime.Player player )
+    {
+        if (player.IsMasterClient)
+        {
+            return spawnPointPlayer1;
+        }
+
+        return spawnPointPlayer2;
     }
 
 }

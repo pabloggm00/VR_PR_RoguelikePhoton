@@ -38,13 +38,12 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         // Leer el movimiento del input
         movementInput = context.ReadValue<Vector2>();
 
-
-        if (movementInput != Vector2.zero) // Solo actualizar cuando haya movimiento
+        if (movementInput.x != 0) // Solo actualizar cuando haya movimiento horizontal
         {
-            photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, movementInput.x > 0); // Se pasa el flip (true o false)
+            // Determinar el flip basado en el input horizontal
+            bool flipRight = movementInput.x > 0;
+            photonView.RPC("UpdateSpriteFlip", RpcTarget.AllBuffered, flipRight);
         }
-
-
     }
 
     void Start()
@@ -57,11 +56,15 @@ public class PlayerMove : MonoBehaviourPunCallbacks
         }
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
     }
+
+
 
     void Update()
     { 
         movementInput = movementInput.normalized;
+
     }
 
     void FixedUpdate()

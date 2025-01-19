@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterSelectionManager : MonoBehaviourPunCallbacks
@@ -47,6 +48,7 @@ public class CharacterSelectionManager : MonoBehaviourPunCallbacks
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public override void OnLeftRoom()

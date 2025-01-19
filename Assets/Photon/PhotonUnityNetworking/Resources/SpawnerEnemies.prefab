@@ -48,7 +48,14 @@ MonoBehaviour:
   minEnemies: 1
   maxEnemies: 3
   regularEnemies:
+  - {fileID: 5558169003926074543, guid: b245b55a58028c74b9aff67af2baca5c, type: 3}
+  - {fileID: 5558169003926074543, guid: cf1030936ba66c6439c167ce1dfe07d8, type: 3}
+  - {fileID: 5558169003926074543, guid: 7af0c53b8e57ace44812c6f07efcaf0a, type: 3}
   - {fileID: 5558169003926074543, guid: 1efdc04ec0031474cb0bcc9157339d07, type: 3}
+  - {fileID: 5558169003926074543, guid: 23abba33f295a2442a5f5269965e3a78, type: 3}
+  - {fileID: 5558169003926074543, guid: 4838191e782e5e243b8659be06229ab8, type: 3}
+  - {fileID: 5558169003926074543, guid: 5f4798c9f0cfe1245ae69aba19617770, type: 3}
+  - {fileID: 5558169003926074543, guid: 7872936095f7c16478a1fbead940b8aa, type: 3}
   bossEnemy: {fileID: 5558169003926074543, guid: 1efdc04ec0031474cb0bcc9157339d07, type: 3}
   roundsUntilBoss: 3
   roundPauseDuration: 2

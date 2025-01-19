@@ -13,10 +13,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
     [Header("Efectos Visuales")]
     public SpriteRenderer spriteRenderer; 
-    public Color damageColor = Color.red;
+    DamageEffect damageEffect;
+    /*public Color damageColor = Color.red;
     public float damageBlinkDuration = 0.1f; // Duración del parpadeo
     public float damageBlinkDurationAndInvulnerableOffset = 0.1f; // Duración del parpadeo
-    public int damageBlinkCount = 3; // Cantidad de parpadeos
+    public int damageBlinkCount = 3; // Cantidad de parpadeos?*/
 
     PlayerController controller;
 
@@ -26,17 +27,21 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     {
         controller = GetComponent<PlayerController>();
         currentHealth = maxHealth;
+        damageEffect = GetComponent<DamageEffect>();
+        damageEffect.Init(spriteRenderer);
     }
 
     [PunRPC]
     public void TakeDamage(int damage, ElementType enemyElement)
     {
-        if (!photonView.IsMine) return;
+        
         if (isInvulnerable) return;
 
         float elementDamage = damage * controller.elementCurrent.GetMultiplierDamage(enemyElement);
 
         currentHealth -= damage;
+
+        damageEffect.ApplyDamageBlink();
 
         if (currentHealth <= 0)
         {
@@ -45,11 +50,11 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         }
         else
         {
-            StartCoroutine(ApplyDamageEffect());
+            //StartCoroutine(ApplyDamageEffect());
         }
     }
 
-    private IEnumerator ApplyDamageEffect()
+    /*private IEnumerator ApplyDamageEffect()
     {
         isInvulnerable = true;
         GetComponent<CapsuleCollider2D>().enabled = false;
@@ -68,7 +73,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         GetComponent<CapsuleCollider2D>().enabled = true;
 
         isInvulnerable = false;
-    }
+    }*/
 
     private void Die()
     {

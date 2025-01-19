@@ -13,6 +13,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public TMP_InputField roomNameInput;
     public Transform roomListContent;
     public GameObject roomListItemPrefab;
+    public GameObject messageEmptyPlayerName;
+    public GameObject messageEmptyRoomName;
 
     private void Start()
     {
@@ -28,38 +30,46 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public void SetPlayerName()
     {
-        if (!string.IsNullOrEmpty(playerNameInput.text))
-        {
-            PhotonNetwork.NickName = playerNameInput.text; // Configurar nombre del jugador
-        }
-        else
-        {
-            Debug.LogWarning("El nombre del jugador no puede estar vacío.");
-        }
+        PhotonNetwork.NickName = playerNameInput.text; // Configurar nombre del jugador
     }
 
     public void CreateRoom()
     {
         if (!string.IsNullOrEmpty(roomNameInput.text))
         {
-            RoomOptions roomOptions = new RoomOptions
+            if (!string.IsNullOrEmpty(playerNameInput.text))
             {
-                MaxPlayers = 2 // Máximo de jugadores en la sala
-            };
+                RoomOptions roomOptions = new RoomOptions
+                {
+                    MaxPlayers = 2 // Máximo de jugadores en la sala
+                };
 
-            SetPlayerName(); // Asegurarse de que el nombre esté configurado antes de crear la sala
-            PhotonNetwork.CreateRoom(roomNameInput.text, roomOptions);
+                SetPlayerName(); // Asegurarse de que el nombre esté configurado antes de crear la sala
+                PhotonNetwork.CreateRoom(roomNameInput.text, roomOptions);
+            }
+            else
+            {
+                messageEmptyPlayerName.SetActive(true);
+            }
+            
         }
         else
         {
-            Debug.LogWarning("El nombre de la sala no puede estar vacío.");
+            messageEmptyRoomName.SetActive(true);
         }
     }
 
     public void JoinRoom(string roomName)
     {
-        SetPlayerName();
-        PhotonNetwork.JoinRoom(roomName);
+        if (!string.IsNullOrEmpty(playerNameInput.text))
+        {
+            SetPlayerName();
+            PhotonNetwork.JoinRoom(roomName);
+        }
+        else
+        {
+            messageEmptyPlayerName.SetActive(true);
+        }
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)

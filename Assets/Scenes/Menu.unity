@@ -1385,6 +1385,8 @@ MonoBehaviour:
   roomNameInput: {fileID: 1641817407}
   roomListContent: {fileID: 225246998}
   roomListItemPrefab: {fileID: 1661220381778425553, guid: 4a6a059a8161fa547a3d11c245427d41, type: 3}
+  messageEmptyPlayerName: {fileID: 0}
+  messageEmptyRoomName: {fileID: 0}
 --- !u!1 &1240047081
 GameObject:
   m_ObjectHideFlags: 0
