@@ -30,10 +30,7 @@ public class EnemyMovement : MonoBehaviourPunCallbacks
         {
             UpdateTarget(); // Solo el servidor actualiza el objetivo
         }
-    }
 
-    private void FixedUpdate()
-    {
         if (PhotonNetwork.IsMasterClient)
         {
             // Solo el MasterClient mueve al enemigo
@@ -46,8 +43,13 @@ public class EnemyMovement : MonoBehaviourPunCallbacks
         else
         {
             // Clientes interpolan hacia la posición enviada
-            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.fixedDeltaTime * moveSpeed);
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        
     }
 
     // RPC para actualizar posición en clientes
@@ -122,6 +124,7 @@ public class EnemyMovement : MonoBehaviourPunCallbacks
     [PunRPC]
     public void UpdateEnemyFlip(bool flipRight)
     {
+        Debug.Log(spriteRenderer);
         spriteRenderer.flipX = !flipRight; // Flipa al enemigo también
     }
 }

@@ -4,6 +4,7 @@ using Photon.Pun;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Realtime;
 
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
@@ -111,7 +112,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     /// <summary>
     /// Maneja la actualización de propiedades personalizadas.
     /// </summary>
-    public void OnPlayerPropertiesUpdated(ExitGames.Client.Photon.Hashtable changedProps)
+    public override void OnPlayerPropertiesUpdate(Player player,ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (changedProps.ContainsKey("CharacterIndex"))
         {
