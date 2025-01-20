@@ -7,32 +7,33 @@ using TMPro;
 public class DamageDisplay : MonoBehaviour
 {
     [Header("Configuración del texto")]
-    public GameObject damageTextPrefab; // Prefab del texto a mostrar
-    public Vector2 randomAreaSize = new Vector2(1f, 1f); // Tamaño del área de aparición aleatoria (ancho x alto)
-    public float textLifetime = 1f; // Duración del texto visible
+    public GameObject damageTextPrefab; 
+    public Vector2 randomAreaSize = new Vector2(1f, 1f); 
+    public float textLifetime = 1f; 
 
     [Header("Animación del texto")]
-    public float moveSpeed = 1f; // Velocidad de movimiento hacia arriba
-    public float fadeSpeed = 2f; // Velocidad de desvanecimiento
+    public float moveSpeed = 1f; 
+    public float fadeSpeed = 2f; 
 
-    private Transform displayArea; // Área base donde aparecerá el texto (generalmente sobre el enemigo)
+    private Transform displayArea; 
 
     private void Start()
     {
         displayArea = GetComponent<Transform>();
     }
 
-    [PunRPC]
+    
     public void ShowDamage(float damage, float multiplier)
     {
 
-        // Crear el texto del daño
-        //TMP_Text damageText = Instantiate(damageTextPrefab, displayArea.position, Quaternion.identity, displayArea);
-
         damageTextPrefab.SetActive(true);
 
-        TMP_Text damageText = damageTextPrefab.GetComponent<TMP_Text>();
+        // Crear el texto del daño
+        TMP_Text damageText = Instantiate(damageTextPrefab, displayArea.position, Quaternion.identity, displayArea).GetComponent<TMP_Text>();
         damageText.text = Mathf.RoundToInt(damage).ToString();
+
+        Color originalColor = damageText.color;
+        damageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
 
         // Asignar color según el multiplicador del daño
         if (multiplier > 1f) damageText.color = Color.red; // Daño crítico (débil al elemento)
@@ -43,7 +44,8 @@ public class DamageDisplay : MonoBehaviour
         Vector3 randomPosition = GetRandomPositionInArea();
         damageText.transform.position = randomPosition;
 
-        // Iniciar la animación del texto
+
+        StopCoroutine(AnimateDamageText(damageText));
         StartCoroutine(AnimateDamageText(damageText));
     }
 
@@ -59,8 +61,8 @@ public class DamageDisplay : MonoBehaviour
 
     private IEnumerator AnimateDamageText(TMP_Text damageText)
     {
-        float elapsedTime = 0f;
         Color originalColor = damageText.color;
+        float elapsedTime = 0f;
 
         while (elapsedTime < textLifetime)
         {
@@ -76,7 +78,7 @@ public class DamageDisplay : MonoBehaviour
         }
 
         // Destruir el texto al final de la animación
-        //Destroy(damageText.gameObject);
-        damageTextPrefab.SetActive(false);
+        Destroy(damageText.gameObject);
+        
     }
 }

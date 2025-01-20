@@ -12,7 +12,7 @@ public class GameplayManager : MonoBehaviour
     public Transform spawnPointPlayer1;
     public Transform spawnPointPlayer2;
     //public GameObject poolParent;
-    public int soulsNeeded = 5;
+    public int soulsNeeded = 10;
 
     public List<GameObject> playersInGame = new List<GameObject>();
 
@@ -65,6 +65,24 @@ public class GameplayManager : MonoBehaviour
         }
 
         return spawnPointPlayer2;
+    }
+
+    public Transform FindNearestPlayer(Transform origen)
+    {
+        Transform nearestPlayer = null;
+        float closestDistance = float.MaxValue;
+
+        foreach (GameObject player in playersInGame)
+        {
+            float distance = Vector2.Distance(origen.position, player.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                nearestPlayer = player.transform;
+            }
+        }
+
+        return nearestPlayer;
     }
 
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviourPunCallbacks
 {
     private Vector2 direction;
     private float speed;
@@ -40,12 +40,21 @@ public class Bullet : MonoBehaviour
         }
 
         // Desactivar la bala tras colisionar
-        GetComponent<PhotonView>().RPC("DeactivateBullet", RpcTarget.AllBuffered);
+        //GetComponent<PhotonView>().RPC("DeactivateBullet", RpcTarget.AllBuffered);
+        DestroyBullet();
     }
 
     [PunRPC]
     public void DeactivateBullet()
     {
         gameObject.SetActive(false); // Desactiva la bala
+    }
+
+    private void DestroyBullet()
+    {
+        if (photonView.IsMine) // Solo el propietario puede destruir la bala
+        {
+            PhotonNetwork.Destroy(gameObject); // Destruye la bala y sincroniza
+        }
     }
 }

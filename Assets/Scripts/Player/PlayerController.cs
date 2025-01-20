@@ -18,31 +18,36 @@ public class PlayerController : MonoBehaviourPunCallbacks
     int maxSouls;
     public static event Action<ElementType, int> UpdateSoulHUD;
 
+    public bool canChangeToWater = false;
+    public bool canChangeToFire = false;
+    public bool canChangeToLeaf = false;
+    public bool canChangeToRock = false;
 
     public override void OnEnable()
     {
         // Suscribirse a las acciones del grupo ChangeElement
-        InputManager.playerControls.Player.ChangeElement1.performed += ctx => OnChangeElement(0);
-        InputManager.playerControls.Player.ChangeElement2.performed += ctx => OnChangeElement(1);
-        InputManager.playerControls.Player.ChangeElement3.performed += ctx => OnChangeElement(2);
-        InputManager.playerControls.Player.ChangeElement4.performed += ctx => OnChangeElement(3);
+        InputManager.playerControls.Player.ChangeElement1.performed += ctx => OnChangeElement(0, canChangeToWater);
+        InputManager.playerControls.Player.ChangeElement2.performed += ctx => OnChangeElement(1, canChangeToFire);
+        InputManager.playerControls.Player.ChangeElement3.performed += ctx => OnChangeElement(2, canChangeToLeaf);
+        InputManager.playerControls.Player.ChangeElement4.performed += ctx => OnChangeElement(3, canChangeToRock);
     }
 
     public override void OnDisable()
     {
-        InputManager.playerControls.Player.ChangeElement1.performed -= ctx => OnChangeElement(0);
-        InputManager.playerControls.Player.ChangeElement2.performed -= ctx => OnChangeElement(1);
-        InputManager.playerControls.Player.ChangeElement3.performed -= ctx => OnChangeElement(2);
-        InputManager.playerControls.Player.ChangeElement4.performed -= ctx => OnChangeElement(3);
+        InputManager.playerControls.Player.ChangeElement1.performed -= ctx => OnChangeElement(0, canChangeToWater);
+        InputManager.playerControls.Player.ChangeElement2.performed -= ctx => OnChangeElement(1, canChangeToFire);
+        InputManager.playerControls.Player.ChangeElement3.performed -= ctx => OnChangeElement(2, canChangeToLeaf);
+        InputManager.playerControls.Player.ChangeElement4.performed -= ctx => OnChangeElement(3, canChangeToRock);
     }
 
-    private void OnChangeElement(int elementIndex)
+    private void OnChangeElement(int elementIndex, bool canChange)
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine) return; // Solo el propietario puede cambiar de elemento
 
-        if (elementIndex >= 0 && elementIndex < elementSpritePlayer.Count)
+        if (canChange && elementIndex >= 0 && elementIndex < elementSpritePlayer.Count)
         {
             photonView.RPC("ChangeElementRPC", RpcTarget.All, elementIndex);
+            ResetElementState(elementIndex);
         }
     }
 
@@ -81,6 +86,30 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
 
     }
+    private void ResetElementState(int elementIndex)
+    {
+        ElementType type = elementSpritePlayer[elementIndex].elementType;
+
+        // Reiniciar souls y booleano
+        elementSouls[type] = 0;
+        UpdateSoulHUD?.Invoke(type, 0); // Actualizar la interfaz gráfica
+
+        switch (type)
+        {
+            case ElementType.Agua:
+                canChangeToWater = false;
+                break;
+            case ElementType.Fuego:
+                canChangeToFire = false;
+                break;
+            case ElementType.Hoja:
+                canChangeToLeaf = false;
+                break;
+            case ElementType.Piedra:
+                canChangeToRock = false;
+                break;
+        }
+    }
 
     public void ChangeElement(ElementSprite tipoACambiar)
     {
@@ -97,7 +126,31 @@ public class PlayerController : MonoBehaviourPunCallbacks
             elementSouls[tipo] = maxSouls;
         }
 
-        UpdateSoulHUD?.Invoke(tipo, cantidad);
+        CheckElementUnlock(tipo);
+
+        UpdateSoulHUD?.Invoke(tipo, elementSouls[tipo]);
+    }
+
+    private void CheckElementUnlock(ElementType tipo)
+    {
+        if (elementSouls[tipo] == maxSouls)
+        {
+            switch (tipo)
+            {
+                case ElementType.Agua:
+                    canChangeToWater = true;
+                    break;
+                case ElementType.Fuego:
+                    canChangeToFire = true;
+                    break;
+                case ElementType.Hoja:
+                    canChangeToLeaf = true;
+                    break;
+                case ElementType.Piedra:
+                    canChangeToRock = true;
+                    break;
+            }
+        }
     }
 
 }
