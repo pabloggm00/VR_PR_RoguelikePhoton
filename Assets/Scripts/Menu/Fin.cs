@@ -9,8 +9,8 @@ public class Fin : MonoBehaviour
 {
     private void OnEnable()
     {
-        InputManager.playerControls.UI.Fin.performed -= FinInput;
-        InputManager.playerControls.UI.Fin.canceled -= FinInput;
+        InputManager.playerControls.UI.Fin.performed += FinInput;
+        InputManager.playerControls.UI.Fin.canceled += FinInput;
     }
 
     private void OnDisable()

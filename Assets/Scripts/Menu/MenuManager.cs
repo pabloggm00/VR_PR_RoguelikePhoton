@@ -20,8 +20,9 @@ public class MenuManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.ConnectUsingSettings(); 
+        PhotonNetwork.ConnectUsingSettings();
 
+        PlayerPrefs.SetFloat("Volumen", 0.5f);
      
     }
 

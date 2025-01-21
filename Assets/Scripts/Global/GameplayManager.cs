@@ -14,7 +14,8 @@ public class GameplayManager : MonoBehaviour
     //public GameObject poolParent;
     public int soulsNeeded = 10;
 
-  
+
+    bool isCargado;
 
     public List<GameObject> players = new List<GameObject>();
 
@@ -41,9 +42,10 @@ public class GameplayManager : MonoBehaviour
 
     private void Update()
     {
-        if (GameObject.FindGameObjectsWithTag("Muerto").Length == 2)
+        if (GameObject.FindGameObjectsWithTag("Muerto").Length == 2 && !isCargado)
         {
-            PhotonNetwork.LoadLevel("Menu");
+            PhotonNetwork.LoadLevel("Fin");
+            isCargado = true;
         }
     }
 
