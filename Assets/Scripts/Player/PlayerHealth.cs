@@ -87,9 +87,18 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
     private void Die()
     {
-        spriteRenderer.sprite = controller.elementCurrent.spriteMuerto;
+        photonView.RPC("ChangeSpriteMuerto", RpcTarget.All);
+
         GetComponent<PlayerMove>().Muerto();
         GetComponent<PlayerMove>().enabled = false;
+    }
+
+    [PunRPC]
+    public void ChangeSpriteMuerto()
+    {
+        isDead = true;
+        this.gameObject.tag = "Muerto";
+        spriteRenderer.sprite = controller.elementCurrent.spriteMuerto;
     }
 
     public void Heal(float amount)

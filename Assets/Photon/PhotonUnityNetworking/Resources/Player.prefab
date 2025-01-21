@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 2919922831249549404}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -312,6 +312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 7427133847649038961}
   spritesSettings: {fileID: 11400000, guid: 32261cec496a97e4d89f15a7ccbdc22f, type: 2}
+  forceField: {fileID: 8075045704015589655}
   elementCurrent: {fileID: 11400000, guid: 8cca56457281fd54099ccea6ffaf55be, type: 2}
   elementSouls: []
   canChangeToWater: 1

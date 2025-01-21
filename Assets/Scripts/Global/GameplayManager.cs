@@ -14,6 +14,8 @@ public class GameplayManager : MonoBehaviour
     //public GameObject poolParent;
     public int soulsNeeded = 10;
 
+  
+
     public List<GameObject> players = new List<GameObject>();
 
     private void Awake()
@@ -35,6 +37,14 @@ public class GameplayManager : MonoBehaviour
             SpawnPlayer();
         }
       
+    }
+
+    private void Update()
+    {
+        if (GameObject.FindGameObjectsWithTag("Muerto").Length == 2)
+        {
+            PhotonNetwork.LoadLevel("Menu");
+        }
     }
 
     private void SpawnPlayer()
@@ -67,5 +77,7 @@ public class GameplayManager : MonoBehaviour
         return spawnPointPlayer2;
     }
 
+
+    
 
 }

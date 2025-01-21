@@ -72,6 +72,8 @@ MonoBehaviour:
   - StopApply
   - PauseGame
   - ResumeGame
+  - ChangeSprite
+  - ChangeSpriteMuerto
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

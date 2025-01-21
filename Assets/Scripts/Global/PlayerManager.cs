@@ -9,6 +9,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
     public List<GameObject> playersInGame = new List<GameObject>(); // Lista sincronizada de jugadores
 
+   
+
     private void Awake()
     {
         if (instance == null)
@@ -21,7 +23,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         }
     }
 
-   
+
+
 
     [PunRPC]
     public void AddPlayerToNetwork(int viewID)
@@ -62,4 +65,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
         return nearestPlayer;
     }
+
+
 }

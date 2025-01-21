@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public SpriteRenderer spriteRenderer;
     public PlayerSprites spritesSettings;
-
+    public GameObject forceField;
 
     public ElementSprite elementCurrent;
     List<ElementSprite> elementSpritePlayer;
@@ -146,25 +146,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         UpdateSoulHUD?.Invoke(soul.elementType, soul.currentSouls); // Notificar al HUD
     }
 
-    private void CheckElementUnlock(ElementType tipo)
+    public void HideForceField()
     {
-
-        switch (tipo)
-        {
-            case ElementType.Agua:
-                canChangeToWater = true;
-                break;
-            case ElementType.Fuego:
-                canChangeToFire = true;
-                break;
-            case ElementType.Hoja:
-                canChangeToLeaf = true;
-                break;
-            case ElementType.Piedra:
-                canChangeToRock = true;
-                break;
-        }
-        
+        forceField.gameObject.SetActive(false);
     }
 
 }

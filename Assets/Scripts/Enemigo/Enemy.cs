@@ -74,11 +74,11 @@ public class Enemy : MonoBehaviourPunCallbacks
         {
             OnEnemyDeath?.Invoke(photonView.ViewID); // Notificar al spawner
             //photonView.RPC("SpawnSouls", RpcTarget.AllBuffered);
-            PhotonNetwork.Destroy(gameObject); // Eliminar al enemigo
+            //PhotonNetwork.Destroy(gameObject); // Eliminar al enemigo
         }
         else
         {
-            Destroy(gameObject); // Solo destruir localmente si no es MasterClient
+            //Destroy(gameObject); // Solo destruir localmente si no es MasterClient
         }
 
 

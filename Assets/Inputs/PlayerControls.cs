@@ -251,6 +251,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fin"",
+                    ""type"": ""Button"",
+                    ""id"": ""b1948140-eeb4-4ec4-8178-ca5a279ce820"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -262,6 +271,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Pausa"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e810299e-1bdf-4124-bff6-91791113e3a2"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fin"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -281,6 +301,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pausa = m_UI.FindAction("Pausa", throwIfNotFound: true);
+        m_UI_Fin = m_UI.FindAction("Fin", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -429,11 +450,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_Pausa;
+    private readonly InputAction m_UI_Fin;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
         public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pausa => m_Wrapper.m_UI_Pausa;
+        public InputAction @Fin => m_Wrapper.m_UI_Fin;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -446,6 +469,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Pausa.started += instance.OnPausa;
             @Pausa.performed += instance.OnPausa;
             @Pausa.canceled += instance.OnPausa;
+            @Fin.started += instance.OnFin;
+            @Fin.performed += instance.OnFin;
+            @Fin.canceled += instance.OnFin;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -453,6 +479,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Pausa.started -= instance.OnPausa;
             @Pausa.performed -= instance.OnPausa;
             @Pausa.canceled -= instance.OnPausa;
+            @Fin.started -= instance.OnFin;
+            @Fin.performed -= instance.OnFin;
+            @Fin.canceled -= instance.OnFin;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -482,5 +511,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnPausa(InputAction.CallbackContext context);
+        void OnFin(InputAction.CallbackContext context);
     }
 }

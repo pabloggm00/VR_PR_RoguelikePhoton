@@ -31,7 +31,7 @@ public class EnemyMovement : MonoBehaviourPunCallbacks
 
     private void FindClosestPlayer()
     {
-        GameObject[] players = GameplayManager.instance.players.ToArray();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         float minDistance = Mathf.Infinity;
 
         foreach (GameObject player in players)
