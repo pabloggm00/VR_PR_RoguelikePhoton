@@ -44,8 +44,12 @@ public class MenuManager : MonoBehaviourPunCallbacks
                     MaxPlayers = 2 // Máximo de jugadores en la sala
                 };
 
-                SetPlayerName(); // Asegurarse de que el nombre esté configurado antes de crear la sala
-                PhotonNetwork.CreateRoom(roomNameInput.text, roomOptions);
+                if (PhotonNetwork.IsConnectedAndReady)
+                {
+                    SetPlayerName(); // Asegurarse de que el nombre esté configurado antes de crear la sala
+                    PhotonNetwork.CreateRoom(roomNameInput.text, roomOptions);
+                }
+                
             }
             else
             {
@@ -98,12 +102,38 @@ public class MenuManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("CharacterIndex"))
         {
             ExitGames.Client.Photon.Hashtable initialProperties = new ExitGames.Client.Photon.Hashtable
-        {
-            { "CharacterIndex", 0 } // Valor inicial por defecto
-        };
+            {
+                { "CharacterIndex", 0 } // Valor inicial por defecto
+            };
             PhotonNetwork.LocalPlayer.SetCustomProperties(initialProperties);
         }
 
+        // Sincronizar propiedades del MasterClient con los nuevos jugadores
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (Photon.Realtime.Player player in PhotonNetwork.PlayerList)
+            {
+                if (player.CustomProperties.TryGetValue("CharacterIndex", out object characterIndex))
+                {
+                    GetComponent<PhotonView>().RPC("SyncPlayerProperties", RpcTarget.AllBuffered, player.ActorNumber, (int)characterIndex);
+                }
+            }
+        }
+
         PhotonNetwork.LoadLevel("CharacterSelection"); // Cargar la escena de selección de personaje
+    }
+
+    [PunRPC]
+    private void SyncPlayerProperties(int actorNumber, int characterIndex)
+    {
+        Photon.Realtime.Player player = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+        if (player != null)
+        {
+            ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable
+            {
+                { "CharacterIndex", characterIndex }
+            };
+            player.SetCustomProperties(properties);
+        }
     }
 }

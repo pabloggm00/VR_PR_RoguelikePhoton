@@ -41,7 +41,7 @@ public class CharacterSelectionManager : MonoBehaviourPunCallbacks
             PlayerListItem itemScript = playerItem.GetComponent<PlayerListItem>();
 
             // Configurar la entrada del jugador
-            itemScript.SetPlayer(player, playerSprites);
+            itemScript.SetPlayer(player);
         }
     }
 
@@ -76,10 +76,10 @@ public class CharacterSelectionManager : MonoBehaviourPunCallbacks
         UpdatePlayerList(); // Actualiza la lista de jugadores al salir un jugador
     }
 
-    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    /*public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         Debug.Log($"Propiedades de {targetPlayer.NickName} actualizadas.");
         UpdatePlayerList(); // Asegúrate de que la lista de jugadores refleje los cambios
-    }
+    }*/
 
 }

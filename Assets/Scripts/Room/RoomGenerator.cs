@@ -10,7 +10,7 @@ public class RoomGenerator : MonoBehaviour
     public int height;
 
     [Header("Prefabs")]
-    public GameObject floorPrefab; // Prefab del suelo
+    public List<GameObject> floorPrefabs; // Prefab del suelo
     public GameObject floorParent; // Prefab del suelo
     public GameObject wallPrefab;  // Prefab del muro
     public GameObject wallParent;  // Prefab del muro
@@ -74,8 +74,8 @@ public class RoomGenerator : MonoBehaviour
                 }
                 else
                 {
-
-                    Instantiate(floorPrefab, position, Quaternion.identity, floorParent.transform);
+                    int rnd = Random.Range(0, floorPrefabs.Count);
+                    Instantiate(floorPrefabs[rnd], position, Quaternion.identity, floorParent.transform);
 
                 }
 

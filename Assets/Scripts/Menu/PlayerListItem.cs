@@ -15,15 +15,22 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
     public Button previousButton;
 
     [HideInInspector]
-    public Photon.Realtime.Player player; // Referencia al jugador
-    private PlayerSprites playerSprites; // Referencia al ScriptableObject con los sprites
+    public Photon.Realtime.Player player; 
+    private PlayerSprites playerSprites; 
     private int selectedCharacterIndex = 0;
 
-    /// <summary>
-    /// Configura la entrada del jugador.
-    /// </summary>
-    public void SetPlayer(Photon.Realtime.Player player, PlayerSprites sprites)
+    private bool isInitialized = false; // Para evitar múltiples inicializaciones
+
+    public void SetPlayer(Photon.Realtime.Player player)
     {
+        this.player = player;
+        playerNameText.text = player.NickName;
+    }
+
+    /*public void SetPlayer(Photon.Realtime.Player player, PlayerSprites sprites)
+    {
+        if (isInitialized) return; // Evita reinicializar
+
         this.player = player;
         this.playerSprites = sprites;
 
@@ -52,11 +59,15 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         }
 
         UpdateCharacterSprite();
+        isInitialized = true; // Marca como inicializado
     }
 
-    /// <summary>
-    /// Cambia al siguiente personaje.
-    /// </summary>
+    private void Start()
+    {
+        if (player.IsLocal) UpdateCharacterSelection(); // Solo actualiza si es el jugador local
+    }
+
+
     public void NextCharacter()
     {
         selectedCharacterIndex = (selectedCharacterIndex + 1) % playerSprites.elementSprites.Count;
@@ -64,9 +75,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         UpdateCharacterSelection();
     }
 
-    /// <summary>
-    /// Cambia al personaje anterior.
-    /// </summary>
+
     public void PreviousCharacter()
     {
         selectedCharacterIndex = (selectedCharacterIndex - 1 + playerSprites.elementSprites.Count) % playerSprites.elementSprites.Count;
@@ -74,44 +83,26 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         UpdateCharacterSelection();
     }
 
-    /// <summary>
-    /// Actualiza el sprite del personaje mostrado.
-    /// </summary>
+
     private void UpdateCharacterSprite()
     {
         characterImage.sprite = playerSprites.elementSprites[selectedCharacterIndex].sprite;
     }
 
-    /// <summary>
-    /// Sincroniza la selección del personaje en las propiedades del jugador.
-    /// </summary>
+
     private void UpdateCharacterSelection()
     {
         if (player.IsLocal)
         {
-            // Establece la propiedad personalizada "CharacterIndex"
             ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable
         {
             { "CharacterIndex", selectedCharacterIndex }
         };
-
             player.SetCustomProperties(properties);
-
-            // Verifica si la clave existe antes de intentar acceder a ella
-            if (player.CustomProperties.TryGetValue("CharacterIndex", out object characterIndex))
-            {
-                Debug.Log((int)characterIndex); // Loguea el índice
-            }
-            else
-            {
-                Debug.LogWarning("CharacterIndex no está definido en las propiedades personalizadas del jugador.");
-            }
         }
     }
 
-    /// <summary>
-    /// Maneja la actualización de propiedades personalizadas.
-    /// </summary>
+
     public override void OnPlayerPropertiesUpdate(Player player,ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (changedProps.ContainsKey("CharacterIndex"))
@@ -119,5 +110,5 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
             selectedCharacterIndex = (int)changedProps["CharacterIndex"];
             UpdateCharacterSprite();
         }
-    }
+    }*/
 }

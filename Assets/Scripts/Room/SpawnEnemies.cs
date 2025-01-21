@@ -10,8 +10,7 @@ public class SpawnEnemies : MonoBehaviour
     public int maxEnemies = 3;
 
     [Header("Lista de Enemigos")]
-    public List<GameObject> regularEnemies; 
-    public GameObject bossEnemy;
+    public List<GameObject> regularEnemies;
 
     [Header("Rondas y Progresión")]
     public int roundsUntilBoss = 3; 
@@ -65,12 +64,12 @@ public class SpawnEnemies : MonoBehaviour
 
         currentRound++;
 
-        int enemyCount = (currentRound % roundsUntilBoss == 0) ? 1 : Random.Range(minEnemies, maxEnemies + 1);
+        int enemyCount = Random.Range(minEnemies, maxEnemies);
         Debug.Log(enemyCount);
         for (int i = 0; i < enemyCount; i++)
         {
             // Determina el prefab del enemigo: jefe o enemigo regular.
-            GameObject enemyPrefab = (currentRound % roundsUntilBoss == 0) ? bossEnemy : regularEnemies[Random.Range(0, regularEnemies.Count)];
+            GameObject enemyPrefab =  regularEnemies[Random.Range(0, regularEnemies.Count)];
 
             // Genera una posición válida para el spawn.
             Vector2 spawnPosition = GetValidSpawnPosition();
@@ -79,7 +78,7 @@ public class SpawnEnemies : MonoBehaviour
             GameObject enemyObject = PhotonNetwork.Instantiate(enemyPrefab.name, spawnPosition, Quaternion.identity);
 
             // Asigna el primer jugador como target inicial (se actualiza más tarde).
-            enemyObject.GetComponent<EnemyMovement>().target = GameplayManager.instance.playersInGame[0];
+            enemyObject.GetComponent<EnemyMovement>().target = PlayerManager.instance.playersInGame[0].transform;
 
             // Añade el enemigo a la lista activa.
             activeEnemies.Add(enemyObject);

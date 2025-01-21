@@ -32,6 +32,11 @@ public class DamageEffect : MonoBehaviour
         }
     }
 
+    public void StopApply()
+    {
+        StopCoroutine(BlinkDamageEffect());
+    }
+
 
     private IEnumerator BlinkDamageEffect()
     {

@@ -109,7 +109,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 7804442946518326888}
   elementCurrent: {fileID: 11400000, guid: 8256232340404e04ebb2e643b021ab9c, type: 2}
   currentHP: 0
-  soulPrefab: {fileID: 2968735327375504131, guid: d372dbe8aea62f34b84befd5ca2842e1, type: 3}
+  soulPrefab: {fileID: 2968735327375504131, guid: 1a5ddc20173b0564f98dbafc6310c638, type: 3}
   minSouls: 1
   maxSouls: 3
 --- !u!114 &8974678414355174117
@@ -159,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1.01
   target: {fileID: 0}
+  spriteRenderer: {fileID: 7804442946518326888}
 --- !u!50 &4488405386302411750
 Rigidbody2D:
   serializedVersion: 4

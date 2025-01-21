@@ -7,27 +7,33 @@ public class GameplayManager : MonoBehaviour
 {
     public static GameplayManager instance;
 
-    //public RoomGenerator roomGenerator;
+    public GameObject playerManagerPrefab;
     public GameObject playerPrefab;
     public Transform spawnPointPlayer1;
     public Transform spawnPointPlayer2;
     //public GameObject poolParent;
     public int soulsNeeded = 10;
 
-    public List<GameObject> playersInGame = new List<GameObject>();
 
     private void Awake()
     {
         instance = this;
+
+        // Instanciar el PlayerManager si no existe
+        if (PlayerManager.instance == null)
+        {
+            PhotonNetwork.Instantiate(playerManagerPrefab.name, Vector3.zero, Quaternion.identity);
+        }
     }
 
     private void Start()
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
+            
             SpawnPlayer();
         }
-        //InitWorld();
+      
     }
 
     private void SpawnPlayer()
@@ -43,19 +49,10 @@ public class GameplayManager : MonoBehaviour
             playerObject.GetComponent<PhotonView>().RPC("SetNickname", RpcTarget.AllBuffered, PhotonNetwork.NickName);
         }
 
-        AgregarJugador(playerObject);
+        // Registrar el jugador en el PlayerManager
+        PlayerManager.instance.RegisterPlayer(playerObject);
     }
 
-    void InitWorld()
-    {
-        // roomGenerator.GenerateRoom();
-        //roomGenerator.InitGame(player);
-    }
-
-    public void AgregarJugador(GameObject player)
-    {
-        playersInGame.Add(player);
-    }
 
     private Transform GetSpawnPoint(Photon.Realtime.Player player )
     {
@@ -67,22 +64,5 @@ public class GameplayManager : MonoBehaviour
         return spawnPointPlayer2;
     }
 
-    public Transform FindNearestPlayer(Transform origen)
-    {
-        Transform nearestPlayer = null;
-        float closestDistance = float.MaxValue;
-
-        foreach (GameObject player in playersInGame)
-        {
-            float distance = Vector2.Distance(origen.position, player.transform.position);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                nearestPlayer = player.transform;
-            }
-        }
-
-        return nearestPlayer;
-    }
 
 }

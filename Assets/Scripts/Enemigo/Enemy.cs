@@ -108,9 +108,8 @@ public class Enemy : MonoBehaviourPunCallbacks
         {
             player.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.All, damage, elementCurrent.elementType);
         }
-
-       
     }
+
 
 
 }

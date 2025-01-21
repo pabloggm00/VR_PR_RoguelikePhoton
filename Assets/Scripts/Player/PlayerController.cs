@@ -4,28 +4,35 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
+[Serializable]
+public class ElementSoul
+{
+    public ElementType elementType; // Tipo de elemento (agua, fuego, etc.)
+    public int currentSouls; // Cantidad actual de souls
+    public bool isUnlocked; // Indica si el elemento está desbloqueado
+}
+
 public class PlayerController : MonoBehaviourPunCallbacks
 {
 
     public SpriteRenderer spriteRenderer;
     public PlayerSprites spritesSettings;
 
-    
-    public ElementSprite elementCurrent {  get; private set; }
+
+    public ElementSprite elementCurrent;
     List<ElementSprite> elementSpritePlayer;
 
-    private Dictionary<ElementType, int> elementSouls = new Dictionary<ElementType, int>();
+    public List<ElementSoul> elementSouls;
     int maxSouls;
     public static event Action<ElementType, int> UpdateSoulHUD;
 
-    public bool canChangeToWater = false;
-    public bool canChangeToFire = false;
-    public bool canChangeToLeaf = false;
-    public bool canChangeToRock = false;
+    public bool canChangeToWater = true;
+    public bool canChangeToFire = true;
+    public bool canChangeToLeaf = true;
+    public bool canChangeToRock = true;
 
     public override void OnEnable()
     {
-        // Suscribirse a las acciones del grupo ChangeElement
         InputManager.playerControls.Player.ChangeElement1.performed += ctx => OnChangeElement(0, canChangeToWater);
         InputManager.playerControls.Player.ChangeElement2.performed += ctx => OnChangeElement(1, canChangeToFire);
         InputManager.playerControls.Player.ChangeElement3.performed += ctx => OnChangeElement(2, canChangeToLeaf);
@@ -46,7 +53,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (canChange && elementIndex >= 0 && elementIndex < elementSpritePlayer.Count)
         {
-            photonView.RPC("ChangeElementRPC", RpcTarget.All, elementIndex);
+            photonView.RPC("ChangeElement", RpcTarget.All, elementIndex);
             ResetElementState(elementIndex);
         }
     }
@@ -55,10 +62,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (photonView.IsMine)
         {
-            int selectedSpriteIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties["CharacterIndex"];
-            photonView.RPC("Init", RpcTarget.All, selectedSpriteIndex);
+            //int selectedSpriteIndex = (int)PhotonNetwork.LocalPlayer.CustomProperties["CharacterIndex"];
+            photonView.RPC("Init", RpcTarget.All);
         }
     }
+
 
     [PunRPC]
     public void ChangeElementRPC(int elementIndex)
@@ -68,89 +76,95 @@ public class PlayerController : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void Init(int spriteIndex)
+    public void Init()
     {
-        elementSpritePlayer = new List<ElementSprite>(); //creo la lista de ls sprites
+        elementSpritePlayer = new List<ElementSprite>();
+        spritesSettings.AgregarSprites(elementSpritePlayer);
 
-        spritesSettings.AgregarSprites(elementSpritePlayer); //agrego los sprites
+        spriteRenderer.sprite = elementCurrent.sprite;
 
-        elementCurrent = elementSpritePlayer[spriteIndex]; //seteo el tipo
+        maxSouls = GameplayManager.instance.soulsNeeded;
 
-        spriteRenderer.sprite = elementCurrent.sprite; //seteo el spite
+        // Inicializar el estado de las souls
+        InitElementSouls();
+    }
 
-        maxSouls = GameplayManager.instance.soulsNeeded; //cantidad máxima de recolectar souls
+    private void InitElementSouls()
+    {
+        elementSouls = new List<ElementSoul>();
 
+        // Inicializar las "souls" para cada tipo de elemento
         foreach (ElementSprite element in spritesSettings.elementSprites)
         {
-            elementSouls.Add(element.elementType, 0); //agrego el diccionario los distintos souls con su cantidad inicial
-        }
+            elementSouls.Add(new ElementSoul
+            {
+                elementType = element.elementType,
+                currentSouls = maxSouls, // Inicia con el máximo de souls
+                isUnlocked = true        // Inicia como desbloqueado
+            });
 
+            // Notificar al HUD sobre el estado inicial
+            UpdateSoulHUD?.Invoke(element.elementType, maxSouls);
+        }
     }
+
     private void ResetElementState(int elementIndex)
     {
-        ElementType type = elementSpritePlayer[elementIndex].elementType;
+        ElementSoul soul = elementSouls[elementIndex];
 
-        // Reiniciar souls y booleano
-        elementSouls[type] = 0;
-        UpdateSoulHUD?.Invoke(type, 0); // Actualizar la interfaz gráfica
+        // Reiniciar las souls y bloquear el cambio
+        soul.currentSouls = 0;
+        soul.isUnlocked = false;
 
-        switch (type)
-        {
-            case ElementType.Agua:
-                canChangeToWater = false;
-                break;
-            case ElementType.Fuego:
-                canChangeToFire = false;
-                break;
-            case ElementType.Hoja:
-                canChangeToLeaf = false;
-                break;
-            case ElementType.Piedra:
-                canChangeToRock = false;
-                break;
-        }
+        // Notificar al HUD sobre el cambio
+        UpdateSoulHUD?.Invoke(soul.elementType, 0);
     }
 
-    public void ChangeElement(ElementSprite tipoACambiar)
+    [PunRPC]
+    public void ChangeElement(int index)
     {
-        elementCurrent = tipoACambiar;
-        spriteRenderer.sprite = tipoACambiar.sprite;
+        ElementSoul soul = elementSouls[index];
+
+        elementCurrent = spritesSettings.elementSprites.Find(e => e.elementType == soul.elementType);
+        spriteRenderer.sprite = elementCurrent.sprite;
     }
 
-    public void AddSoul(ElementType tipo, int cantidad)
+    public void AddSoul(ElementType type, int amount)
     {
-        elementSouls[tipo] += cantidad;
+        // Buscar el elemento en la lista
+        ElementSoul soul = elementSouls.Find(e => e.elementType == type);
+        if (soul == null) return;
 
-        if (elementSouls[tipo] > maxSouls)
+        // Actualizar la cantidad de souls
+        soul.currentSouls += amount;
+        if (soul.currentSouls >= maxSouls)
         {
-            elementSouls[tipo] = maxSouls;
+            soul.currentSouls = maxSouls;
+            soul.isUnlocked = true;
         }
 
-        CheckElementUnlock(tipo);
-
-        UpdateSoulHUD?.Invoke(tipo, elementSouls[tipo]);
+        UpdateSoulHUD?.Invoke(soul.elementType, soul.currentSouls); // Notificar al HUD
     }
 
     private void CheckElementUnlock(ElementType tipo)
     {
-        if (elementSouls[tipo] == maxSouls)
+
+        switch (tipo)
         {
-            switch (tipo)
-            {
-                case ElementType.Agua:
-                    canChangeToWater = true;
-                    break;
-                case ElementType.Fuego:
-                    canChangeToFire = true;
-                    break;
-                case ElementType.Hoja:
-                    canChangeToLeaf = true;
-                    break;
-                case ElementType.Piedra:
-                    canChangeToRock = true;
-                    break;
-            }
+            case ElementType.Agua:
+                canChangeToWater = true;
+                break;
+            case ElementType.Fuego:
+                canChangeToFire = true;
+                break;
+            case ElementType.Hoja:
+                canChangeToLeaf = true;
+                break;
+            case ElementType.Piedra:
+                canChangeToRock = true;
+                break;
         }
+        
     }
 
 }

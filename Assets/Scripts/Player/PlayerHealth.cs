@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
@@ -14,14 +15,13 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     [Header("Efectos Visuales")]
     public SpriteRenderer spriteRenderer; 
     DamageEffect damageEffect;
-    /*public Color damageColor = Color.red;
-    public float damageBlinkDuration = 0.1f; // Duración del parpadeo
-    public float damageBlinkDurationAndInvulnerableOffset = 0.1f; // Duración del parpadeo
-    public int damageBlinkCount = 3; // Cantidad de parpadeos?*/
+
 
     PlayerController controller;
 
-    private bool isInvulnerable = false; 
+    private bool isInvulnerable = false;
+
+    public static event Action<float, float> OnHealthChanged;
 
     private void Start()
     {
@@ -29,51 +29,58 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         currentHealth = maxHealth;
         damageEffect = GetComponent<DamageEffect>();
         damageEffect.Init(spriteRenderer);
+
+        if (photonView.IsMine)
+        {
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        }
     }
 
     [PunRPC]
     public void TakeDamage(int damage, ElementType enemyElement)
     {
-        
+        photonView.RPC("ApplyDamageBlink", RpcTarget.All);
+
+        if (!photonView.IsMine) return; // Solo afecta al jugador local
+
         if (isInvulnerable) return;
+
 
         float elementDamage = damage * controller.elementCurrent.GetMultiplierDamage(enemyElement);
 
         currentHealth -= damage;
 
-        damageEffect.ApplyDamageBlink();
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (currentHealth <= 0)
         {
             currentHealth = 0;
             Die();
         }
-        else
-        {
-            //StartCoroutine(ApplyDamageEffect());
-        }
+
+        StartCoroutine(InvulnerableTime());
     }
 
-    /*private IEnumerator ApplyDamageEffect()
+    IEnumerator InvulnerableTime()
     {
         isInvulnerable = true;
-        GetComponent<CapsuleCollider2D>().enabled = false;
 
-        Color originalColor = spriteRenderer.color;
-        for (int i = 0; i < damageBlinkCount; i++)
-        {
-            spriteRenderer.color = damageColor;
-            yield return new WaitForSeconds(damageBlinkDuration);
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(damageBlinkDuration);
-        }
-
-        yield return new WaitForSeconds(damageBlinkDurationAndInvulnerableOffset);
-
-        GetComponent<CapsuleCollider2D>().enabled = true;
+        yield return new WaitForSeconds(2);
 
         isInvulnerable = false;
-    }*/
+    }
+
+    [PunRPC]
+    public void ApplyDamageBlink()
+    {
+        damageEffect.ApplyDamageBlink();
+    }
+
+    [PunRPC]
+    public void StopApply()
+    {
+        damageEffect.StopApply();
+    }
 
     private void Die()
     {
@@ -87,6 +94,8 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
         {
             currentHealth = maxHealth;
         }
+
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
 }

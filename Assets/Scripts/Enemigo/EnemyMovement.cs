@@ -9,48 +9,11 @@ public class EnemyMovement : MonoBehaviourPunCallbacks
     public float moveSpeed = 2f;
 
     [HideInInspector]
-    public GameObject target;
+    public Transform target;
 
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
     private Vector3 networkPosition; // Para interpolar la posición en clientes
 
-    private void Start()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            UpdateTarget(); // Solo el servidor actualiza el objetivo
-        }
-    }
-
-    private void Update()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            UpdateTarget(); // Solo el servidor actualiza el objetivo
-        }
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // Solo el MasterClient mueve al enemigo
-            if (target != null)
-            {
-                MoveTowardsPlayer();
-                GetComponent<PhotonView>().RPC("UpdatePosition", RpcTarget.Others, transform.position);
-            }
-        }
-        else
-        {
-            // Clientes interpolan hacia la posición enviada
-            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * moveSpeed);
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        
-    }
 
     // RPC para actualizar posición en clientes
     [PunRPC]
@@ -59,72 +22,42 @@ public class EnemyMovement : MonoBehaviourPunCallbacks
         networkPosition = position;
     }
 
+    private void Start()
+    {
+        UpdateTarget();
+    }
+
+    private void Update()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            UpdateTarget();
+
+            if (target != null)
+            {
+                MoveTowardsTarget();
+            }
+        }
+    }
+
     private void UpdateTarget()
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        float closestDistance = float.MaxValue;
-        GameObject closestPlayer = null;
-
-        // Encuentra el jugador más cercano
-        foreach (GameObject player in GameplayManager.instance.playersInGame)
-        {
-            if (player != null)
-            {
-                float distance = Vector2.Distance(transform.position, player.transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestPlayer = player;
-                }
-            }
-        }
-
-        // Actualiza el target si cambió
-        if (closestPlayer != target)
-        {
-            target = closestPlayer;
-            int targetViewID = target != null ? target.GetComponent<PhotonView>().ViewID : -1;
-            GetComponent<PhotonView>().RPC("SetTarget", RpcTarget.All, targetViewID);
-        }
+        target = PlayerManager.instance.FindNearestPlayer(transform);
     }
 
-    [PunRPC]
-    private void SetTarget(int targetViewID)
-    {
-        // Recupera el GameObject a partir del ViewID
-        if (targetViewID != -1)
-        {
-            target = PhotonView.Find(targetViewID)?.gameObject;
-        }
-        else
-        {
-            target = null;
-        }
-    }
-
-    private void MoveTowardsPlayer()
+    private void MoveTowardsTarget()
     {
         if (target == null) return;
 
-        Vector2 direction = (target.transform.position - transform.position).normalized;
+        Vector2 direction = (target.position - transform.position).normalized;
         transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
-
-        // Ajusta la orientación del sprite según la dirección
-        if (direction.x < 0)
-        {
-            photonView.RPC("UpdateEnemyFlip", RpcTarget.AllBuffered, false); // Flipa el sprite a la izquierda
-        }
-        else if (direction.x > 0)
-        {
-            photonView.RPC("UpdateEnemyFlip", RpcTarget.AllBuffered, true); // Flipa el sprite a la derecha
-        }
     }
 
     [PunRPC]
     public void UpdateEnemyFlip(bool flipRight)
     {
-        Debug.Log(spriteRenderer);
         spriteRenderer.flipX = !flipRight; // Flipa al enemigo también
     }
 }

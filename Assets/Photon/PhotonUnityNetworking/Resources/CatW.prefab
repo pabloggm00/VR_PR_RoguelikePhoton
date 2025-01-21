@@ -159,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1.01
   target: {fileID: 0}
+  spriteRenderer: {fileID: 7804442946518326888}
 --- !u!50 &4488405386302411750
 Rigidbody2D:
   serializedVersion: 4
