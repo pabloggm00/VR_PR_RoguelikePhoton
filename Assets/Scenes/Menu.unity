@@ -1240,7 +1240,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -78}
+  m_AnchoredPosition: {x: 0, y: -124.63}
   m_SizeDelta: {x: 545.9, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1066102539
@@ -1390,6 +1390,7 @@ MonoBehaviour:
   roomListItemPrefab: {fileID: 1661220381778425553, guid: 4a6a059a8161fa547a3d11c245427d41, type: 3}
   messageEmptyPlayerName: {fileID: 1066102537}
   messageEmptyRoomName: {fileID: 1947580234}
+  crearSalaButton: {fileID: 1240047083}
 --- !u!1 &1240047081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1467,7 +1468,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1240047084}
   m_OnClick:
     m_PersistentCalls:

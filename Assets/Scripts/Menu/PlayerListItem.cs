@@ -16,10 +16,10 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
     [HideInInspector]
     public Photon.Realtime.Player player; 
-    private PlayerSprites playerSprites; 
-    private int selectedCharacterIndex = 0;
+    //private PlayerSprites playerSprites; 
+    //private int selectedCharacterIndex = 0;
 
-    private bool isInitialized = false; // Para evitar múltiples inicializaciones
+   // private bool isInitialized = false; // Para evitar múltiples inicializaciones
 
     public void SetPlayer(Photon.Realtime.Player player)
     {

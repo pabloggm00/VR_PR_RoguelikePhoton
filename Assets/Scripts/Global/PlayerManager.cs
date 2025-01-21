@@ -21,6 +21,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         }
     }
 
+   
+
     [PunRPC]
     public void AddPlayerToNetwork(int viewID)
     {

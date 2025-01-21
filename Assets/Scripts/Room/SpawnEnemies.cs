@@ -78,7 +78,7 @@ public class SpawnEnemies : MonoBehaviour
             GameObject enemyObject = PhotonNetwork.Instantiate(enemyPrefab.name, spawnPosition, Quaternion.identity);
 
             // Asigna el primer jugador como target inicial (se actualiza más tarde).
-            enemyObject.GetComponent<EnemyMovement>().target = PlayerManager.instance.playersInGame[0].transform;
+            //enemyObject.GetComponent<EnemyMovement>().target = PlayerManager.instance.playersInGame[0].transform;
 
             // Añade el enemigo a la lista activa.
             activeEnemies.Add(enemyObject);

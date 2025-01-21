@@ -14,6 +14,7 @@ public class GameplayManager : MonoBehaviour
     //public GameObject poolParent;
     public int soulsNeeded = 10;
 
+    public List<GameObject> players = new List<GameObject>();
 
     private void Awake()
     {
@@ -51,6 +52,8 @@ public class GameplayManager : MonoBehaviour
 
         // Registrar el jugador en el PlayerManager
         PlayerManager.instance.RegisterPlayer(playerObject);
+        players.Add(playerObject);
+        
     }
 
 

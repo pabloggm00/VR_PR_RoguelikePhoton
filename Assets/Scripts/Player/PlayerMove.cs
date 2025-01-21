@@ -57,6 +57,10 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     }
 
+    public void Muerto()
+    {
+        rb.velocity = Vector2.zero;
+    }
 
 
     void Update()

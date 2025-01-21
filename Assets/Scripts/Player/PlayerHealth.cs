@@ -20,7 +20,7 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     PlayerController controller;
 
     private bool isInvulnerable = false;
-
+    bool isDead;
     public static event Action<float, float> OnHealthChanged;
 
     private void Start()
@@ -39,6 +39,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
     [PunRPC]
     public void TakeDamage(int damage, ElementType enemyElement)
     {
+
+        if (isDead) return;
+
         photonView.RPC("ApplyDamageBlink", RpcTarget.All);
 
         if (!photonView.IsMine) return; // Solo afecta al jugador local
@@ -84,7 +87,9 @@ public class PlayerHealth : MonoBehaviourPunCallbacks
 
     private void Die()
     {
-        Debug.Log("El jugador ha muerto.");
+        spriteRenderer.sprite = controller.elementCurrent.spriteMuerto;
+        GetComponent<PlayerMove>().Muerto();
+        GetComponent<PlayerMove>().enabled = false;
     }
 
     public void Heal(float amount)

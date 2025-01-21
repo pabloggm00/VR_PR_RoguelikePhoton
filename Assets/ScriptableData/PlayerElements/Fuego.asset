@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Fuego
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 93d80b0f60a809542b3084a589c74d67, type: 3}
+  spriteMuerto: {fileID: 21300000, guid: cb9e27235f27a0c408a5c6914454762d, type: 3}
   elementType: 1
   debilidad: 3
   resistente: 2

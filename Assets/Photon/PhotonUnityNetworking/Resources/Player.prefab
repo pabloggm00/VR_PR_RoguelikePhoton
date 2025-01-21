@@ -362,7 +362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blinkDuration: 2
-  blinkCount: 6
+  blinkCount: 8
   blinkInterval: 0.2
   blinkColor: {r: 0.6509434, g: 0.033775367, b: 0.033775367, a: 1}
 --- !u!114 &1428801546976960241

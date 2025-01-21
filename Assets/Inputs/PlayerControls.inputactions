@@ -222,7 +222,7 @@
             "id": "600ef12b-aab0-4113-a252-3e2352db856d",
             "actions": [
                 {
-                    "name": "Reiniciar",
+                    "name": "Pausa",
                     "type": "Button",
                     "id": "27b5b7cf-5c5c-4885-9649-4e8ef075962d",
                     "expectedControlType": "Button",
@@ -235,11 +235,11 @@
                 {
                     "name": "",
                     "id": "ead15de0-582a-456d-957e-d893efa88582",
-                    "path": "<Keyboard>/r",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Reiniciar",
+                    "action": "Pausa",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class ElementSprite : ScriptableObject
 {
     public Sprite sprite;
+    public Sprite spriteMuerto;
     public ElementType elementType;
     public ElementType debilidad;
     public ElementType resistente;

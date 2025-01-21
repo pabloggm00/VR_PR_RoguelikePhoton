@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Agua
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 7c3f3bf2175e16041b56f110b7df778d, type: 3}
+  spriteMuerto: {fileID: 21300000, guid: 81606b1da236c0444bc2d4087373f116, type: 3}
   elementType: 0
   debilidad: 2
   resistente: 3
